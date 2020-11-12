@@ -25,7 +25,7 @@ int main()
 	sf::RenderWindow rWindow(sf::VideoMode(900,900),"Tower Defence");
 	sf::Event event;
 	sf::View view;
-
+	// Salut, c'est le debut du jeu
 	int gameMode = MENU;
 
 	while (rWindow.isOpen())
