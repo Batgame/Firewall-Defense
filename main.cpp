@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/graphics.hpp>
 #include <SFML/System.hpp>
+#include "Road.h"
 
 /*
 			ENUMERATION :
@@ -27,6 +28,12 @@ int main()
 	sf::View view;
 	// Salut, c'est le debut du jeu
 	int gameMode = MENU;
+
+
+	
+
+
+
 
 	while (rWindow.isOpen())
 	{
@@ -55,6 +62,7 @@ int main()
 
 			//--------------REFRESH MENU----------------------
 			//menu.refresh(rWindow,       );
+			
 
 
 			break;
