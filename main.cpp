@@ -1,73 +1,62 @@
+#include <SFML/Graphics.hpp>
 #include <iostream>
-#include <SFML/graphics.hpp>
-#include <SFML/System.hpp>
-
-/*
-			ENUMERATION :
-	Une enumération est une sorte de "liste de define" par clef
-	Chaque "define" sera changé après la compilation par un entier.
-	L'avantage de l'enumeration est d'avoir une liste d'identifiant
-	qui par définitions ne possède pas de doublons. De plus les identfiant
-	qui vont remplacé les enumerations sont créée automatiquement (0,1,2,3,...)
-	
-
-*/
-
-enum e_id_gamemode {
-	MENU,
-	INGAME,
-	LOADING,	//Risque de ne pas être utilisé (Pas de chargement nécessaire)
-};
-
+#include "constShop.h"
+#include "Shop.h"
 
 int main()
 {
-	sf::RenderWindow rWindow(sf::VideoMode(900,900),"Tower Defence");
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Firewall-Defense");
+	sf::View view(sf::Vector2f(450, 450), sf::Vector2f(WIDTH, HEIGHT));
+	
 	sf::Event event;
-	sf::View view;
-	// Salut, c'est le debut du jeu
-	int gameMode = MENU;
+	sf::Vector2i mousePos;
+	sf::Vector2f posMenu;
 
-	while (rWindow.isOpen())
+	Shop magasin;
+
+	bool isActive;
+
+	while (window.isOpen())
 	{
-
-		//----------Modification de la taille de la vue pour ne pas "étirer" l'affichage
-		while (rWindow.pollEvent(event))
+		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Resized)
 			{
-				if (rWindow.getSize().x > rWindow.getSize().y)//redimensionnement par ratio
+				if (window.getSize().x < window.getSize().y)  //redimensionnement par ratio
 				{
-					view.setSize(sf::Vector2f(view.getSize().x, view.getSize().x * rWindow.getSize().y / rWindow.getSize().x));
+					view.setSize(sf::Vector2f(900, view.getSize().x * window.getSize().y / window.getSize().x));
 				}
 				else
 				{
-					view.setSize(sf::Vector2f(view.getSize().y * rWindow.getSize().x / rWindow.getSize().y, view.getSize().y));
+					view.setSize(sf::Vector2f(view.getSize().y * window.getSize().x / window.getSize().y, 900));
 				}
 			}
-		}
-		sf::Mouse::getPosition();
+			if (event.type == sf::Event::Closed)
+			{
+				window.close();
+			}
 
-		//------------------------------------------CHOIX MENU-------------------------------------------
-		switch (gameMode)
-		{
-		case MENU:
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
 
-			//--------------REFRESH MENU----------------------
-			//menu.refresh(rWindow,       );
-
-
-			break;
-		case INGAME:
-			
-			//--------------REFRESH MENU----------------------
-
-
-
-			break;
+			}
 		}
 
 
+		window.clear();
+
+		isActive = magasin.isOpenMenu(window, mousePos);
+		
+
+		//On simule la ou le jeu sera
+		sf::RectangleShape jeu(sf::Vector2f(WIDTH, HEIGHT)); 
+		jeu.setFillColor(sf::Color::Black);
+		jeu.setPosition(0, 0);
+		window.draw(jeu);
+		
+
+		magasin.beDraw(window, mousePos, isActive);
+
+		window.display();
 	}
-	return 0;
 }
