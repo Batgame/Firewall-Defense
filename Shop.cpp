@@ -1,5 +1,7 @@
-#include "Shop.h"
-#include "constShop.h"
+#include "header/constShop.h"
+#include "header/Shop.h"
+
+
 
 void Shop::buyTurret(int idAachat)
 {
@@ -26,8 +28,9 @@ void Shop::buyTurret(int idAachat)
 
 
 Shop::Shop() :isActive(0), money(500)
-{
-
+{	
+	shopDeve = sf::RectangleShape(sf::Vector2f(MENU_SIZE));
+	shopNoDeve = sf::RectangleShape(sf::Vector2f(50, 50));
 }
 
 bool Shop::isOpenMenu(sf::RenderWindow& window, sf::Vector2i mousePos)
@@ -46,40 +49,28 @@ bool Shop::isOpenMenu(sf::RenderWindow& window, sf::Vector2i mousePos)
 	return isActive;
 }
 
-
-void Shop::beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive)
+void Shop::beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive, sf::Time dt)
 {
-	
+
 	if (!isActive)
 	{
-		sf::RectangleShape shopNoDev(sf::Vector2f(50, 50));
-		shopNoDev.setFillColor(sf::Color::White); 
-		shopNoDev.setPosition(WIDTH - 50, 0);
-		window.draw(shopNoDev);
+		shopDeve.setPosition(WIDTH, 0);
+		shopNoDeve.setFillColor(sf::Color::White); 
+		shopNoDeve.setPosition(WIDTH - 50, 0);
+		window.draw(shopNoDeve);
+
 	}
 	else
 	{
-		bool movement = 0;
-		sf::RectangleShape shopDeve(sf::Vector2f(MENU_SIZE));
 		shopDeve.setFillColor(sf::Color::Blue);
 
-
-		do
+		shopDeve.move((-dt.asSeconds())*100, 0);
+		if (shopDeve.getPosition().x < MENU_POS.x)
 		{
-			shopDeve.move(-2, 0);
-			if (shopDeve.getPosition().x < MENU_POS.x)
-			{
-				shopDeve.setPosition(MENU_POS);
-				movement = 0;
-			}
-			else
-			{
-				movement = 1;
-			}
-			shopDeve.getPosition();
 			shopDeve.setPosition(MENU_POS);
-		} while (movement);
-
+		}
+		shopDeve.getPosition();
+		shopDeve.setPosition(MENU_POS);
 
 		window.draw(shopDeve);
 	}

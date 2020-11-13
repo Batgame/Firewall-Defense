@@ -1,8 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Shop.h"
-#include "constShop.h"
+#include "header/constShop.h"
 
 class Shop
 {
@@ -10,6 +9,11 @@ class Shop
 	bool isActive;
 	int money;
 	int idAchat;
+	
+	sf::RectangleShape shopDeve;
+	sf::RectangleShape shopNoDeve;
+
+
 
 	void buyTurret(int idAachat);
 
@@ -21,6 +25,6 @@ public :
 	bool isOpenMenu(sf::RenderWindow& window, sf::Vector2i mousePos);
 
 	
-	void beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive);
+	void beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive, sf::Time dt);
 };
 

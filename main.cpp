@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "constShop.h"
-#include "Shop.h"
+#include "header/constShop.h"
+#include "header/Shop.h"
 
 int main()
 {
@@ -11,6 +11,8 @@ int main()
 	sf::Event event;
 	sf::Vector2i mousePos;
 	sf::Vector2f posMenu;
+	sf::Clock clock;
+	sf::Time dt;
 
 	Shop magasin;
 
@@ -42,12 +44,11 @@ int main()
 			}
 		}
 
-
+		dt = clock.restart();
 		window.clear();
 
 		isActive = magasin.isOpenMenu(window, mousePos);
 		
-
 		//On simule la ou le jeu sera
 		sf::RectangleShape jeu(sf::Vector2f(WIDTH, HEIGHT)); 
 		jeu.setFillColor(sf::Color::Black);
@@ -55,7 +56,7 @@ int main()
 		window.draw(jeu);
 		
 
-		magasin.beDraw(window, mousePos, isActive);
+		magasin.beDraw(window, mousePos, isActive, dt);
 
 		window.display();
 	}
