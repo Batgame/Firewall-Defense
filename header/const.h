@@ -13,3 +13,4 @@
 #define BUTTON_POS_OPT sf::Vector2f(SCREEN_WIDTH / 2.0f, 340)
 #define BUTTON_POS_RGL sf::Vector2f(SCREEN_WIDTH / 2.0f, 400)
 #define BUTTON_POS_EXT sf::Vector2f(SCREEN_WIDTH / 2.0f, 460)
+#define BUTTON_POS_RET sf::Vector2f(SCREEN_WIDTH / 2.0f, 600)

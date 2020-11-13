@@ -14,47 +14,42 @@
 - Faire la continuité du menu lorsque l'on clique sur les boutons
 */
 
+enum e_id_gameMode {
+    MENU,
+    REGLES,
+    OPTIONS,
+    INGAME,
+    LOADING,    //Risque de ne pas être utilisé (Pas de chargement nécessaire)
+};
 
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense");
-    sf::View view(sf::Vector2f(450, 450), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+    sf::View view(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 
     sf::Texture img_background;
     sf::Vector2i posSouris;
     sf::Event event;
 
     //-----------------IMAGE BACJGROUND----------------------------
-	if (!img_background.loadFromFile("./addons/mother-board.png"))
+	if (!img_background.loadFromFile("./addons/test2.jpg"))
 	{
 		printf("Pb de chargement de l'image.\n");
 	}
 	sf::Sprite background;
-	background.setScale(0.42f, 0.25f);
+	//background.setScale(0.42f, 0.25f);
+    background.setScale(1, 1);
 	background.setOrigin(0, 0);
 	background.setTexture(img_background);
+    int gameMode = MENU;
 
     //-------------FIN IMAGE BACKGROUND----------------------------
 	while (window.isOpen())
 	{
-		sf::Event event;
 		while (window.pollEvent(event))
 		{
-            //--------------------------Resise de la fenêtre----------------------------------
-            if (event.type == sf::Event::Resized)
-            {
-                if (window.getSize().x < window.getSize().y)  //redimensionnement par ratio
-                {
-                    view.setSize(sf::Vector2f(900, view.getSize().x * window.getSize().y / window.getSize().x));
-                }
-                else
-                {
-
-                    view.setSize(sf::Vector2f(view.getSize().y * window.getSize().x / window.getSize().y, 900));
-                }
-            }
-
+         
             //-----------------Event Fermeture-------------------
             if (event.type == sf::Event::Closed)
             {
@@ -64,36 +59,84 @@ int main()
             //-----------------Event souris-------------------
             if (event.type == sf::Event::MouseButtonPressed)
             {
+
                 if (event.mouseButton.button == sf::Mouse::Left)
                 {
-                    if (isButtonSelect(window, posSouris, BUTTON_POS_PLAY))
+                    switch (gameMode)
                     {
-                        printf("On joue ! \n");
+                    case MENU:
+
+                        if (isButtonSelect(window, posSouris, BUTTON_POS_PLAY))
+                        {
+                            printf("On joue ! \n");
+                        }
+                        else if (isButtonSelect(window, posSouris, BUTTON_POS_OPT))
+                        {
+                            printf("Nous sommes dans les options !\n");
+                        }
+                        else if (isButtonSelect(window, posSouris, BUTTON_POS_RGL))
+                        {
+                            gameMode = REGLES;
+                            printf("Voici les règles du jeu !\n");
+                        }
+                        else if (isButtonSelect(window, posSouris, BUTTON_POS_EXT))
+                        {
+                            window.close();
+                        }
+                        break;
+
+                    case REGLES:
+                        if (isButtonSelect(window, posSouris, BUTTON_POS_RET))
+                        {
+                            gameMode = MENU;
+                            printf("Retour au menu ! \n");
+                        }
+                        break;
+
                     }
-                    else if (isButtonSelect(window, posSouris, BUTTON_POS_OPT))
-                    {
-                        printf("Nous sommes dans les options !\n");
-                    }
-                    else if (isButtonSelect(window, posSouris, BUTTON_POS_RGL))
-                    {
-                        printf("Voici les règles du jeu !\n");
-                    }
-                    else if (isButtonSelect(window, posSouris, BUTTON_POS_EXT))
-                    {
-                        window.close();
-                    }
+                    
                 }
             }
 		}
 
 
-        posSouris = sf::Mouse::getPosition(window);
+        if (window.getSize().x < window.getSize().y)  //redimensionnement par ratio
+        {
+            view.setSize(sf::Vector2f(SCREEN_WIDTH, view.getSize().x * window.getSize().y / window.getSize().x));
+        }
+        else
+        {
 
+            view.setSize(sf::Vector2f(view.getSize().y * window.getSize().x / window.getSize().y, SCREEN_HEIGHT));
+        }
+        int position_reel_y = window.mapPixelToCoords(sf::Mouse::getPosition(window), view).y;
+        int position_reel_x = window.mapPixelToCoords(sf::Mouse::getPosition(window), view).x;
+        posSouris.x = position_reel_x;
+        posSouris.y = position_reel_y;
+        window.setView(view);
 
-		window.clear();
-		window.draw(background);
-        beDraw(window, posSouris);
+        switch (gameMode)
+        {
+        case MENU:
+
+            //--------------REFRESH MENU----------------------
+            //menu.refresh(rWindow,);
+            window.draw(background);
+            beDraw(window, posSouris, view);
+            
+
+            break;
+        case REGLES:
+
+            //--------------REFRESH MENU----------------------
+            window.draw(background);
+            drowRegles(window, posSouris, view);
+            
+
+            break;
+        }
 		window.display();
+        window.clear();
 	}
 }
 
@@ -105,7 +148,7 @@ La fonction dessine :
     - Les changements de couleurs des boutons lorsque la souris passes dessus
     - Les changements de couleurs de texte lorsque la souris passe dessus ( /!\ TO DO /!\ )
 */
-void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris)
+void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
 {
     //Création button Play
     sf::RectangleShape buttonPlay(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
@@ -226,7 +269,7 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris)
     buttonRegles.setPosition(BUTTON_POS_RGL);
     buttonExit.setPosition(BUTTON_POS_EXT);
 
-
+    
     //On dessine tout sur la fenêtre 
     window.draw(buttonPlay);
     window.draw(buttonOptions);
@@ -239,10 +282,77 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris)
     window.draw(textExit);
 }
 
+void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
+{
+
+    //Création button Exit
+    sf::RectangleShape buttonRetour(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
+    sf::FloatRect buttonRetourRect = buttonRetour.getLocalBounds();
+    buttonRetour.setOrigin(buttonRetourRect.width / 2.0f, buttonRetourRect.height / 2.0f);
+
+    sf::Font font;
+    sf::Text textTitre;
+    sf::Text textRetour;
+
+    //INITIALISATION
+    textTitre.setFont(font);
+    textRetour.setFont(font);
+
+    //--------------------POLICE-------------------------
+    if (!font.loadFromFile("./addons/font.ttf")) {
+
+        printf("Impossible de charger les font.\n");
+    }
+
+    //DEBUT TITRE
+    textTitre.setString("Firewall-Defense");
+    textTitre.setCharacterSize(100);
+    textTitre.setFillColor(sf::Color::White);
+    sf::FloatRect titreRect = textTitre.getLocalBounds();
+    textTitre.setOrigin(titreRect.width / 2.0f, titreRect.height / 2.0f);
+    textTitre.setPosition(TEXT_TITRE_POS);
+    //FIN TITRE
+
+    //DEBUT MENU
+    //-----------JOUER----------------
+    //-----------RETOUR------------------
+    textRetour.setString("Retour");
+    textRetour.setCharacterSize(TEXT_SIZE);
+    textRetour.setFillColor(sf::Color::White);
+    sf::FloatRect retourRect = textRetour.getLocalBounds();
+    textRetour.setOrigin(retourRect.width / 2.0f, retourRect.height / 1.25f);
+    textRetour.setPosition(BUTTON_POS_RET);
+    //FIN MENU
+    //----------------FIN POLICE-------------------------
+
+
+
+    buttonRetour.setFillColor(sf::Color(11, 46, 150));
+
+
+
+
+    //--------------------TEST SI LA SOURIS PASSE SUR LE TEXTE------------------------------
+
+    if (isButtonSelect(window, posSouris, BUTTON_POS_RET))
+    {
+        buttonRetour.setFillColor(sf::Color::Black);
+        textRetour.setFillColor(sf::Color::White);
+    }
+
+    buttonRetour.setPosition(BUTTON_POS_RET);
+
+
+    //On dessine tout sur la fenêtre 
+    window.draw(buttonRetour);
+    window.draw(textTitre);
+    window.draw(textRetour);
+}
+
 bool isButtonSelect(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::Vector2f posButton)
 {
     int res = 0;
-    if (posSouris.x >= (posButton.x - (0.5 * BUTTON_SIZE.x)) && posSouris.x <= posButton.x + (0.5 * BUTTON_SIZE.x) && posSouris.y >= (posButton.y - 0.5 * BUTTON_SIZE.y) && posSouris.y <= posButton.y + 0.5 * BUTTON_SIZE.y)
+    if (posSouris.x >= (posButton.x - (0.3 * BUTTON_SIZE.x)) && posSouris.x <= posButton.x + (0.3 * BUTTON_SIZE.x) && posSouris.y >= (posButton.y - 0.5 * BUTTON_SIZE.y) && posSouris.y <= posButton.y + 0.5 * BUTTON_SIZE.y)
     {
         res = 1;
     }
