@@ -26,12 +26,12 @@ int main()
     sf::Event event;
 
     //-----------------IMAGE BACJGROUND----------------------------
-	if (!img_background.loadFromFile("./addons/background.jpg"))
+	if (!img_background.loadFromFile("./addons/mother-board.png"))
 	{
 		printf("Pb de chargement de l'image.\n");
 	}
 	sf::Sprite background;
-	background.setScale(0.5f, 0.5f);
+	background.setScale(0.42f, 0.25f);
 	background.setOrigin(0, 0);
 	background.setTexture(img_background);
 
@@ -107,10 +107,26 @@ La fonction dessine :
 */
 void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris)
 {
+    //Création button Play
     sf::RectangleShape buttonPlay(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
+    sf::FloatRect buttonPlayRect = buttonPlay.getLocalBounds();
+    buttonPlay.setOrigin(buttonPlayRect.width / 2.0f, buttonPlayRect.height / 2.0f);
+
+    //Création button Options
     sf::RectangleShape buttonOptions(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
+    sf::FloatRect buttonOptionsRect = buttonOptions.getLocalBounds();
+    buttonOptions.setOrigin(buttonOptionsRect.width / 2.0f, buttonOptionsRect.height / 2.0f);
+
+    //Création button Règle
     sf::RectangleShape buttonRegles(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
+    sf::FloatRect buttonReglesRect = buttonRegles.getLocalBounds();
+    buttonRegles.setOrigin(buttonReglesRect.width / 2.0f, buttonReglesRect.height / 2.0f);
+
+    //Création button Exit
     sf::RectangleShape buttonExit(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
+    sf::FloatRect buttonExitRect = buttonExit.getLocalBounds();
+    buttonExit.setOrigin(buttonExitRect.width / 2.0f, buttonExitRect.height / 2.0f);
+
     sf::Font font;
     sf::Text textTitre;
     sf::Text textJouer;
@@ -134,46 +150,51 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris)
     //DEBUT TITRE
     textTitre.setString("Firewall-Defense");
     textTitre.setCharacterSize(100);
-    textTitre.setFillColor(sf::Color::Black);
-    sf::FloatRect textRect = textTitre.getLocalBounds();
-    textTitre.setOrigin(textRect.left + textRect.width / 2.0f,
-        textRect.top + textRect.height / 2.0f);
-    textTitre.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0f, 100));
+    textTitre.setFillColor(sf::Color::White);
+    sf::FloatRect titreRect = textTitre.getLocalBounds();
+    textTitre.setOrigin(titreRect.width / 2.0f, titreRect.height / 2.0f);
+    textTitre.setPosition(TEXT_TITRE_POS);
     //FIN TITRE
 
     //DEBUT MENU
     //-----------JOUER----------------
     textJouer.setString("Jouer");
-    textJouer.setCharacterSize(50);
-    textJouer.setFillColor(sf::Color::Black);
-    sf::FloatRect textRect1 = textJouer.getLocalBounds();
+    textJouer.setCharacterSize(TEXT_SIZE);
+    textJouer.setFillColor(sf::Color::White);
+    sf::FloatRect jouerRect = textJouer.getLocalBounds();
+    textJouer.setOrigin(jouerRect.width / 2.0f, jouerRect.height / 1.25f);
     textJouer.setPosition(BUTTON_POS_PLAY);
+    
+
     //-----------OPTION--------------------
     textOption.setString("Options");
-    textOption.setCharacterSize(50);
-    textOption.setFillColor(sf::Color::Black);
-    sf::FloatRect textRect2 = textOption.getLocalBounds();
+    textOption.setCharacterSize(TEXT_SIZE);
+    textOption.setFillColor(sf::Color::White);
+    sf::FloatRect optionsRect = textOption.getLocalBounds();
+    textOption.setOrigin(optionsRect.width / 2.0f, optionsRect.height / 1.25f);
     textOption.setPosition(BUTTON_POS_OPT);
     //------------REGLE-------------------
     textRegles.setString("Règles");
-    textRegles.setCharacterSize(50);
-    textRegles.setFillColor(sf::Color::Black);
-    sf::FloatRect textRect3 = textRegles.getLocalBounds();
+    textRegles.setCharacterSize(TEXT_SIZE);
+    textRegles.setFillColor(sf::Color::White);
+    sf::FloatRect reglesRect = textRegles.getLocalBounds();
+    textRegles.setOrigin(reglesRect.width / 2.0f, reglesRect.height / 1.25f);
     textRegles.setPosition(BUTTON_POS_RGL);
     //-----------EXIT------------------
     textExit.setString("Quitter");
-    textExit.setCharacterSize(50);
-    textExit.setFillColor(sf::Color::Black);
-    sf::FloatRect textRect4 = textExit.getLocalBounds();
+    textExit.setCharacterSize(TEXT_SIZE);
+    textExit.setFillColor(sf::Color::White);
+    sf::FloatRect exitRect = textRegles.getLocalBounds();
+    textExit.setOrigin(exitRect.width / 2.0f, exitRect.height / 1.25f);
     textExit.setPosition(BUTTON_POS_EXT);
     //FIN MENU
     //----------------FIN POLICE-------------------------
 
 
-    buttonPlay.setFillColor(sf::Color::Red);
-    buttonOptions.setFillColor(sf::Color::Red);
-    buttonRegles.setFillColor(sf::Color::Red);
-    buttonExit.setFillColor(sf::Color::Red);
+    buttonPlay.setFillColor(sf::Color(11, 46, 150));
+    buttonOptions.setFillColor(sf::Color(11, 46, 150));
+    buttonRegles.setFillColor(sf::Color(11, 46, 150));
+    buttonExit.setFillColor(sf::Color(11, 46, 150));
 
 
 
@@ -221,7 +242,7 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris)
 bool isButtonSelect(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::Vector2f posButton)
 {
     int res = 0;
-    if (posSouris.x >= posButton.x && posSouris.x <= posButton.x + BUTTON_SIZE.x && posSouris.y >= posButton.y && posSouris.y <= posButton.y + BUTTON_SIZE.y)
+    if (posSouris.x >= (posButton.x - (0.5 * BUTTON_SIZE.x)) && posSouris.x <= posButton.x + (0.5 * BUTTON_SIZE.x) && posSouris.y >= (posButton.y - 0.5 * BUTTON_SIZE.y) && posSouris.y <= posButton.y + 0.5 * BUTTON_SIZE.y)
     {
         res = 1;
     }
