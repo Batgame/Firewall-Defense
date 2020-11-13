@@ -48,7 +48,7 @@ void Trojan::refresh(sf::Time const& dt, std::vector<Road>& roads)
 	}
 }
 
-void Trojan::beDraw(sf::RenderWindow& rWindow)
+void Trojan::beDraw(sf::RenderWindow& rWindow) const
 {
 	sf::CircleShape c;
 	c.setRadius(15);
@@ -71,4 +71,25 @@ bool Trojan::isAlive()
 sf::Vector2f Trojan::getPos()
 {
 	return pos;
+}
+
+sf::Vector2f Trojan::getFuturePos()
+{
+	sf::Vector2f v = sf::Vector2f(pos.x, pos.y);
+	switch (direction)
+	{
+	case UP:
+		v.y -= speed;
+		break;
+	case RIGHT:
+		v.x += speed;
+		break;
+	case DOWN:
+		v.y += speed;
+		break;
+	case LEFT:
+		v.x -= speed;
+		break;
+	}
+	return v;
 }

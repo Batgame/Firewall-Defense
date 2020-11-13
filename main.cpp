@@ -2,9 +2,11 @@
 #include <SFML/graphics.hpp>
 #include <SFML/System.hpp>
 #include "Road.h"
+#include "Trojan.h"
+#include "Game.h"
 
 /*
-			ENUMERATION :
+							ENUMERATION :
 	Une enumération est une sorte de "liste de define" par clef
 	Chaque "define" sera changé après la compilation par un entier.
 	L'avantage de l'enumeration est d'avoir une liste d'identifiant
@@ -25,12 +27,11 @@ int main()
 	sf::Event event;
 	sf::View view(sf::Vector2f(450,450),sf::Vector2f(900,900));
 	int gameMode = INGAME;
-	std::vector<Road> pathMap1;
-
-	//INITIALISATION PATH 1
-
-	Road::createMap(pathMap1, 1);
-
+	Game game(1);
+	sf::Clock clock;
+	sf::Time dt;
+	
+	
 	while (rWindow.isOpen())
 	{
 		//----------Modification de la taille de la vue pour ne pas "étirer" l'affichage
@@ -54,6 +55,11 @@ int main()
 			rWindow.close();
 		}
 
+		//---delta time :
+
+		dt = clock.restart();
+
+
 		//------------------------------------------CHOIX MENU-------------------------------------------
 		switch (gameMode)
 		{
@@ -69,23 +75,8 @@ int main()
 		case INGAME:
 			
 			//--------------REFRESH MENU----------------------
-			sf::RectangleShape r;
-			for (int y = 0; y < 20; y++)	//DEBUG BackGround
-			{
-				for (int x = 0; x < 20; x++)
-				{
-					r.setSize(sf::Vector2f(45, 45));
-					r.setPosition(x * 45, y * 45);
-					r.setFillColor(sf::Color(70,70,70));
-					rWindow.draw(r);
-				}
-			}
-
-
-			for (int i = 0; i < pathMap1.size(); i++)
-			{
-				pathMap1[i].beDraw(rWindow);
-			}
+			game.refresh(dt);
+			game.beDraw(rWindow);
 
 			break;
 		}

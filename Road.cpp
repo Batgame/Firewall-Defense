@@ -155,8 +155,5 @@ int Road::getId(std::vector<Road>& map, sf::Vector2i const& pos_)
 		if (int(map[i].getPos().x) == int(pos_.x) && int(map[i].getPos().y == pos_.y))
 			return i;
 	}
-	
-	std::cout << "pos_ : "<<pos_.x <<" : "<<pos_.y << std::endl;
-
 	return -1;//Crash volontairement le jeux
 }

@@ -1,9 +1,12 @@
 #include "Projectile.h"
 #define PI 3.14159265358979323
 
-Projectile::Projectile(sf::Vector2f pos_, int id_, float speedMax_) : pos(pos_), speedMax(speedMax_), id(id_), alive(true)
+Projectile::Projectile(sf::Vector2f pos_, int id_,int damage_ ,float speedMax_) : pos(pos_), speedMax(speedMax_), id(id_), alive(true),damage(damage_)
 {
 
+}
+Projectile::Projectile(float posX, float posY, int id_, int damage_, float speedMax_) : pos(sf::Vector2f(posX,posY)), speedMax(speedMax_), id(id_), alive(true), damage(damage_)
+{
 }
 void Projectile::refresh(sf::Time const& dt, sf::Vector2f& aim)
 {
@@ -16,11 +19,10 @@ void Projectile::refresh(sf::Time const& dt, sf::Vector2f& aim)
 	pos.y += dt.asSeconds() * v.y;
 }
 
-sf::Vector2f Projectile::getVector(sf::Vector2f a) //x -> alpha, y -> norme
+sf::Vector2f getVector(sf::Vector2f a) //x -> alpha, y -> norme
 {
     while (a.x > (PI * 2))
         a.x -= (PI * 2);
-
 
     if (a.x < PI / 2)
     {
@@ -50,7 +52,7 @@ int Projectile::getDamage()
     return damage;
 }
 
-void Projectile::beDraw(sf::RenderWindow& rWindow)
+void Projectile::beDraw(sf::RenderWindow& rWindow) const
 {
     sf::CircleShape c;
     c.setRadius(5);
@@ -69,7 +71,7 @@ bool Projectile::isAlive()
     return alive;
 }
 
-sf::Vector2f Projectile::getPolarVector(sf::Vector2f a)
+sf::Vector2f getPolarVector(sf::Vector2f a)
 {
     if (a.x > 0 && a.y < 0)
     {

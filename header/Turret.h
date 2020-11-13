@@ -1,5 +1,6 @@
 #pragma once
-#include "Projectile"
+#include "Projectile.h"
+#include "Mortar.h"
 
 enum e_id_Turret
 {
@@ -9,21 +10,31 @@ enum e_id_Turret
 	KASPERSKY
 };
 
-#define CD_AVAST 0.3
+#define CD_AVAST 0.1f
 #define DMG_AVAST 1
+#define RANGE_AVAST 3
 
+#define CD_KASPERSKY 2
+#define DMG_KASPERSKY 10
+#define RANGE_KASPERSKY 6
 
 class Turret
 {
+	sf::Vector2i pos;
 	float coolDown;
+	float range;
 	int damage;
-	int id;
+
 
 public : 
+	int id;
 
-	Turret(int id_ = 0);
-	Projectile create();
-
-
+	Turret(sf::Vector2i pos_,int id_ = 0);
+	bool canShoot();
+	void resfresh(sf::Time const& dt);
+	Projectile createProjectile();
+	Mortar createMortar(sf::Vector2f aim);
+	sf::Vector2f getPos() const;
+	float getRange();
 };
 
