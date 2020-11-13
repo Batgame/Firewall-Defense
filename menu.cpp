@@ -27,12 +27,11 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense");
     sf::View view(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-
-    sf::Texture img_background;
     sf::Vector2i posSouris;
     sf::Event event;
 
     //-----------------IMAGE BACJGROUND----------------------------
+    sf::Texture img_background;
 	if (!img_background.loadFromFile("./addons/test2.jpg"))
 	{
 		printf("Pb de chargement de l'image.\n");
@@ -41,10 +40,21 @@ int main()
 	//background.setScale(0.42f, 0.25f);
     background.setScale(1, 1);
 	background.setOrigin(0, 0);
-	background.setTexture(img_background);
-    int gameMode = MENU;
+    background.setTexture(img_background);
 
+    //------------------SECOND BACKGROUND------------------------
+    sf::Texture image_regles;
+    if (!image_regles.loadFromFile("./addons/neon_rose.jpg"))
+    {
+        printf("Pb de chargement de l'image.\n");
+    }
+    sf::Sprite background_regles;
+    //background.setScale(0.42f, 0.25f);
+    background_regles.setScale(1, 1);
+    background_regles.setOrigin(0, 0);
+    background_regles.setTexture(image_regles);
     //-------------FIN IMAGE BACKGROUND----------------------------
+    int gameMode = MENU;
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -129,7 +139,8 @@ int main()
         case REGLES:
 
             //--------------REFRESH MENU----------------------
-            window.draw(background);
+
+            window.draw(background_regles);
             drowRegles(window, posSouris, view);
             
 
@@ -171,6 +182,7 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     buttonExit.setOrigin(buttonExitRect.width / 2.0f, buttonExitRect.height / 2.0f);
 
     sf::Font font;
+    sf::Font font2;
     sf::Text textTitre;
     sf::Text textJouer;
     sf::Text textOption;
@@ -178,18 +190,21 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     sf::Text textExit;
 
     //INITIALISATION
-    textTitre.setFont(font);
-    textJouer.setFont(font);
-    textOption.setFont(font);
-    textRegles.setFont(font);
-    textExit.setFont(font);
+    textTitre.setFont(font2);
+    textJouer.setFont(font2);
+    textOption.setFont(font2);
+    textRegles.setFont(font2);
+    textExit.setFont(font2);
 
     //--------------------POLICE-------------------------
     if (!font.loadFromFile("./addons/font.ttf")) {
 
         printf("Impossible de charger les font.\n");
     }
+    if (!font2.loadFromFile("./addons/font2.ttf")) {
 
+        printf("Impossible de charger les font.\n");
+    }
     //DEBUT TITRE
     textTitre.setString("Firewall-Defense");
     textTitre.setCharacterSize(100);
@@ -291,17 +306,24 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
     buttonRetour.setOrigin(buttonRetourRect.width / 2.0f, buttonRetourRect.height / 2.0f);
 
     sf::Font font;
+    sf::Font font2;
     sf::Text textTitre;
     sf::Text textRetour;
+    sf::Text textRegles;
 
     //INITIALISATION
-    textTitre.setFont(font);
-    textRetour.setFont(font);
+    textTitre.setFont(font2);
+    textRetour.setFont(font2);
+    textRegles.setFont(font2);
 
     //--------------------POLICE-------------------------
     if (!font.loadFromFile("./addons/font.ttf")) {
 
-        printf("Impossible de charger les font.\n");
+        printf("Impossible de charger la font1.\n");
+    }
+    if (!font2.loadFromFile("./addons/font2.ttf")) {
+
+        printf("Impossible de charger la font2.\n");
     }
 
     //DEBUT TITRE
@@ -314,7 +336,15 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
     //FIN TITRE
 
     //DEBUT MENU
-    //-----------JOUER----------------
+    //-----------Regles----------------
+    textRegles.setString("Firewall défense est un jeu basé sur le concept de Tower Defense.\n\nVotre but est de défendre l'entrée de virus et les empêcher d'arriver à la \nfin du chemin. Pour cela, vous pouvez construire des tours aux capacités \ndifférentes pour défendre votre chemin.Attention, si vous laissez passer \ntrop de virus, ils détruiront votre système d'exploitation.\n\nBonne chance !");
+    textRegles.setCharacterSize(25);
+    //textRegles.setFillColor(sf::Color(249, 129, 58));
+    textRegles.setFillColor(sf::Color::White);
+    //sf::FloatRect reglesRect = textRegles.getLocalBounds();
+    //textRegles.setOrigin(reglesRect.width / 2.0f, reglesRect.height / 2.0f);
+    textRegles.setPosition(TEXT_REGLES_POS);
+
     //-----------RETOUR------------------
     textRetour.setString("Retour");
     textRetour.setCharacterSize(TEXT_SIZE);
@@ -325,12 +355,7 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
     //FIN MENU
     //----------------FIN POLICE-------------------------
 
-
-
     buttonRetour.setFillColor(sf::Color(11, 46, 150));
-
-
-
 
     //--------------------TEST SI LA SOURIS PASSE SUR LE TEXTE------------------------------
 
@@ -347,6 +372,7 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
     window.draw(buttonRetour);
     window.draw(textTitre);
     window.draw(textRetour);
+    window.draw(textRegles);
 }
 
 bool isButtonSelect(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::Vector2f posButton)
