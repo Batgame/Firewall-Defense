@@ -1,6 +1,7 @@
-#include "Road.h"
+#include "header/Road.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "header/Road.h"
 
 void Road::drawLine(std::vector<Road>& path ,sf::Vector2f a, sf::Vector2f b)
 {
@@ -55,8 +56,6 @@ void Road::createMap(std::vector<Road>& map, int id)
 	{
 	case 1:// MAP 1
 		//-----------------------------------TO DO--------------------------------
-		//Ligne simple de gauche à droite 
-		std::cout << "CONTRUCTION D'UNE MAP DE 1ER NIVEAU" << std::endl;
 		Road::drawLine(map, sf::Vector2f(0, 4), sf::Vector2f(3, 4));
 		Road::drawLine(map, sf::Vector2f(4, 4), sf::Vector2f(4, 11));
 		Road::drawLine(map, sf::Vector2f(4, 12), sf::Vector2f(2, 12));
@@ -65,7 +64,15 @@ void Road::createMap(std::vector<Road>& map, int id)
 		Road::drawLine(map, sf::Vector2f(9, 14), sf::Vector2f(9, 8));
 		Road::drawLine(map, sf::Vector2f(9, 7), sf::Vector2f(7, 7));
 		Road::drawLine(map, sf::Vector2f(6, 7), sf::Vector2f(6, 6));
+		Road::drawLine(map, sf::Vector2f(6, 5), sf::Vector2f(11, 5));
+		Road::drawLine(map, sf::Vector2f(12, 5), sf::Vector2f(12, 4));
+		Road::drawLine(map, sf::Vector2f(14, 3), sf::Vector2f(14, 10));
+		Road::drawLine(map, sf::Vector2f(14, 11), sf::Vector2f(19, 11));
 
+		//----RACCOURCI----
+		Road::drawLine(map, sf::Vector2f(4,3), sf::Vector2f(13, 3));
+		//----INTERSECTION
+		map[getId(map,sf::Vector2i(4,4))].addNextDirection(UP);
 		break;
 	}
 }
@@ -73,16 +80,41 @@ void Road::createMap(std::vector<Road>& map, int id)
 /*
 Ajoute un chemin suivant à la Road
 */
-void Road::addNextDirection(int direction)
+void Road::addNextDirection(int const& direction)
 {
-	nextDirection[direction] = true;
+	bool doublon = false;
+	for (int i = 0; i < nextDirection.size() && !doublon; i++)	//Vérification anti-doublon
+	{
+		if (nextDirection[i] == direction)
+			doublon = true;
+	}
+
+	if (!doublon)
+	{
+		nextDirection.push_back(direction);
+	}
 }
 /*
 Soustrait un chemin suivant à la Road
 */
-void Road::eraseNextDirection(int direction)
+void Road::eraseNextDirection(int const& direction)
 {
-	nextDirection[direction] = false;
+	int idDirection = -1;
+	for (int i = 0; i < nextDirection.size(); i++)	//Vérification anti-doublon
+	{
+		if (nextDirection[i] == direction)
+			idDirection = i;
+	}
+
+	if (idDirection >= 0)
+	{
+		nextDirection.erase(nextDirection.begin() + idDirection);
+	}
+}
+
+sf::Vector2f Road::getPos() const
+{
+	return pos;
 }
 
 Road::Road(sf::Vector2f pos_, std::vector<int> possiblePath) :pos(pos_)
@@ -90,36 +122,34 @@ Road::Road(sf::Vector2f pos_, std::vector<int> possiblePath) :pos(pos_)
 	nextDirection = possiblePath;
 }
 
-int Road::getNextRoad(sf::Vector2f const& position)
+int Road::getNextRoad() const
 {
 	//Retourne aléatoirement une des directions
 	return nextDirection[rand() % nextDirection.size()];
 }
 
-void Road::beDraw(sf::RenderWindow& rWindow)
+void Road::beDraw(sf::RenderWindow& rWindow) const
 {
 	sf::RectangleShape r;
 	r.setSize(sf::Vector2f(43, 43));
 	r.setPosition(pos.x * 45, pos.y * 45);
+	r.setFillColor(sf::Color(0, 113, 202));
+
 	rWindow.draw(r);
-	
-	switch (nextDirection[0])
+
+}
+
+/*
+	Permet d'obtenir la case du tableau vector<Road> correspondant à une position
+*/
+
+int Road::getId(std::vector<Road>& map, sf::Vector2i const& pos_)
+{
+	for (int i = 0; i < map.size(); i++)
 	{
-	case 0:
-		r.setFillColor(sf::Color::Red);	//UP
-
-		break;
-	case 1:
-		r.setFillColor(sf::Color::Green);	//DROITE
-
-		break;
-	case 2:
-		r.setFillColor(sf::Color::Yellow);	//BAS
-
-		break;
-	case 3:
-		r.setFillColor(sf::Color::Blue);	//LEFT
-
-		break;
+		if (map[i].getPos().x == pos_.x && map[i].getPos().y == pos_.y)
+			return i;
 	}
+	
+	return 0;
 }
