@@ -36,25 +36,6 @@ Shop::Shop() :isActive(0), money(500)
 	
 }
 
-bool Shop::isOpenMenu(sf::RenderWindow& window, sf::Vector2i mousePos)
-{
-	mousePos = sf::Mouse::getPosition(window);
-	//if (mousePos.x >= (BUTTON_POS.x - (0.5 * BUTTON_SIZE.x)) && mousePos.x <= BUTTON_POS.x + (0.5 * BUTTON_SIZE.x) && mousePos.y >= (BUTTON_POS.y - 0.5 * BUTTON_SIZE.y) && mousePos.y <= BUTTON_POS.y + 0.5 * BUTTON_SIZE.y)
-	//{
-		//isActive = 1;
-	//}
-	//else 
-	//{
-		//isActive = 0;
-	//}
-
-	sf::Event event;
-
-	
-
-
-	return isActive;
-}
 
 void Shop::beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive, sf::Time dt)
 {
