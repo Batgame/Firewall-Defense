@@ -1,7 +1,7 @@
 #pragma once
 
-#define WIDTH 900
-#define HEIGHT 900
+#define WIDTH 1280
+#define HEIGHT 720
 
 
 //------TOURS--------
@@ -15,9 +15,11 @@
 
 
 //------------------MENU---------------
-#define MENU_SIZE sf::Vector2f(200, 900)
+#define MENU_SIZE sf::Vector2f(WIDTH/4, HEIGHT)
 #define MENU_POS sf::Vector2f(WIDTH - MENU_SIZE.x, 0)
 
 
 #define BUTTON_SIZE sf::Vector2f(50, 50)
-#define BUTTON_POS sf::Vector2f(WIDTH - BUTTON_SIZE.x, 0)
+#define BUTTON_POS sf::Vector2f(WIDTH - 50, 50)
+#define TEXT_SHOP_POS sf::Vector2f(WIDTH - 70, 40)
+#define TEXT_LEAVE_SHOP_POS sf::Vector2f(WIDTH - 80, 40)

@@ -15,8 +15,9 @@ int main()
 	sf::Time dt;
 
 	Shop magasin;
-
-	bool isActive;
+	bool flag = false;
+	bool isActive = 0;
+	mousePos = sf::Mouse::getPosition(window);
 
 	while (window.isOpen())
 	{
@@ -40,24 +41,45 @@ int main()
 
 			if (event.type == sf::Event::MouseButtonPressed)
 			{
-
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					if (event.mouseButton.x >= (BUTTON_POS.x - (0.5 * BUTTON_SIZE.x)) && event.mouseButton.x <= BUTTON_POS.x + (0.5 * BUTTON_SIZE.x) && event.mouseButton.y >= (BUTTON_POS.y - 0.5 * BUTTON_SIZE.y) && event.mouseButton.y <= BUTTON_POS.y + 0.5 * BUTTON_SIZE.y) //sont dedans
+					{
+						if (flag)
+						{
+							isActive = !isActive;
+							flag = false;
+						}
+						else
+						{
+							isActive = true;
+							flag = true;
+						}
+					}
+				}
 			}
 		}
 
 		dt = clock.restart();
 		window.clear();
 
-		isActive = magasin.isOpenMenu(window, mousePos);
+		//isActive = magasin.isOpenMenu(window, mousePos);
 		
 		//On simule la ou le jeu sera
 		sf::RectangleShape jeu(sf::Vector2f(WIDTH, HEIGHT)); 
 		jeu.setFillColor(sf::Color::Black);
 		jeu.setPosition(0, 0);
 		window.draw(jeu);
-		
 
-		magasin.beDraw(window, mousePos, isActive, dt);
-
+		if(flag == true )
+		{
+			isActive = true;
+			magasin.beDraw(window, mousePos, isActive, dt);
+		}
+		else {
+			isActive = false;
+			magasin.beDraw(window, mousePos, isActive, dt);
+		}
 		window.display();
 	}
 }

@@ -30,20 +30,27 @@ void Shop::buyTurret(int idAachat)
 Shop::Shop() :isActive(0), money(500)
 {	
 	shopDeve = sf::RectangleShape(sf::Vector2f(MENU_SIZE));
-	shopNoDeve = sf::RectangleShape(sf::Vector2f(50, 50));
+	shopNoDeve = sf::RectangleShape(sf::Vector2f(70, 70));
+	sf::FloatRect buttonShopRect = shopNoDeve.getLocalBounds();
+	shopNoDeve.setOrigin(buttonShopRect.width / 2.0f, buttonShopRect.height / 2.0f);
+	
 }
 
 bool Shop::isOpenMenu(sf::RenderWindow& window, sf::Vector2i mousePos)
 {
 	mousePos = sf::Mouse::getPosition(window);
-	if (mousePos.x >= BUTTON_POS.x && mousePos.x <= BUTTON_POS.x + BUTTON_SIZE.x && BUTTON_POS.y >= BUTTON_POS.y && mousePos.y <= BUTTON_POS.y + BUTTON_SIZE.y)
-	{
-		isActive = 1;
-	}
-	else if(!(mousePos.x >= MENU_POS.x && mousePos.x <= MENU_POS.x + MENU_SIZE.x && MENU_POS.y >= MENU_POS.y && mousePos.y <= MENU_POS.y + MENU_SIZE.y))
-	{
-		isActive = 0;
-	}
+	//if (mousePos.x >= (BUTTON_POS.x - (0.5 * BUTTON_SIZE.x)) && mousePos.x <= BUTTON_POS.x + (0.5 * BUTTON_SIZE.x) && mousePos.y >= (BUTTON_POS.y - 0.5 * BUTTON_SIZE.y) && mousePos.y <= BUTTON_POS.y + 0.5 * BUTTON_SIZE.y)
+	//{
+		//isActive = 1;
+	//}
+	//else 
+	//{
+		//isActive = 0;
+	//}
+
+	sf::Event event;
+
+	
 
 
 	return isActive;
@@ -51,13 +58,41 @@ bool Shop::isOpenMenu(sf::RenderWindow& window, sf::Vector2i mousePos)
 
 void Shop::beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive, sf::Time dt)
 {
+	sf::Font font;
+	sf::Text textShop;
+	sf::Text textExitShop;
 
+	textShop.setFont(font);
+	textExitShop.setFont(font);
+
+	//----------SET "SHOP" TEXT ----------
+	textShop.setString("Shop");
+	textShop.setCharacterSize(13);
+	textShop.setFillColor(sf::Color::Black);
+	sf::FloatRect shopRect = textShop.getLocalBounds();
+	textShop.setOrigin(shopRect.width / 2.0f, shopRect.height / 1.25f);
+	textShop.setPosition(TEXT_SHOP_POS);
+
+	//---------SET "LEAVE SHOP" TEXT--------
+	textExitShop.setString("Fermer");
+	textExitShop.setCharacterSize(13);
+	textExitShop.setFillColor(sf::Color::Black);
+	sf::FloatRect leaveShopRect = textExitShop.getLocalBounds();
+	textExitShop.setOrigin(leaveShopRect.width / 2.0f, leaveShopRect.height / 1.25f);
+	textExitShop.setPosition(TEXT_LEAVE_SHOP_POS);
+
+	if (!font.loadFromFile("./addons/font2.ttf")) {
+
+		printf("Impossible de charger la font1.\n");
+	}
 	if (!isActive)
 	{
 		shopDeve.setPosition(WIDTH, 0);
 		shopNoDeve.setFillColor(sf::Color::White); 
-		shopNoDeve.setPosition(WIDTH - 50, 0);
+		shopNoDeve.setPosition(BUTTON_POS);
+
 		window.draw(shopNoDeve);
+		window.draw(textShop);
 
 	}
 	else
@@ -73,5 +108,7 @@ void Shop::beDraw(sf::RenderWindow& window, sf::Vector2i mousePos, bool isActive
 		shopDeve.setPosition(MENU_POS);
 
 		window.draw(shopDeve);
+		window.draw(shopNoDeve);
+		window.draw(textExitShop);
 	}
 }

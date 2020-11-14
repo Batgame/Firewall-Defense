@@ -9,7 +9,6 @@ class Shop
 	bool isActive;
 	int money;
 	int idAchat;
-	
 	sf::RectangleShape shopDeve;
 	sf::RectangleShape shopNoDeve;
 
