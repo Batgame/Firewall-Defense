@@ -2,9 +2,9 @@
 #include "Road.h"
 #include <SFML/Graphics.hpp>
 
-Trojan::Trojan(sf::Vector2f pos_, int direction, int hp_):pos(pos_),hp(hp_),distanceToWalk(1),speed(SPEED_MAX)
+Trojan::Trojan(sf::Vector2f pos_, int direction, int hp_):pos(pos_),hp(hp_),distanceToWalk(0),speed(SPEED_MAX)
 {
-	speed = (rand() % int(SPEED_MAX/2 * 100)) / 100.f + SPEED_MAX/2;
+	speed = SPEED_MAX;
 }
 
 void Trojan::refresh(sf::Time const& dt, std::vector<Road>& roads)

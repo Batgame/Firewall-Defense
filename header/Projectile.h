@@ -28,7 +28,6 @@ class Projectile
 
 public :
 	
-	
 	Projectile(sf::Vector2f pos_ = sf::Vector2f(0, 0), int id_ = MISSILE, int damage = 2, float speedMax_ = 8);
 	Projectile(float posX = 0, float posY = 0, int id_ = MISSILE, int damage = 2, float speedMax_ = 8);
 	/*
@@ -36,8 +35,8 @@ public :
 	*/
 	void refresh(sf::Time const& dt, sf::Vector2f& aim);
 
-
 	sf::Vector2f getPos()const;
+	sf::Vector2f getAim() const;
 	int getDamage();
 	void beDraw(sf::RenderWindow& rWindow) const;
 	void kill();

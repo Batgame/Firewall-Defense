@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #define HP 20
-#define SPEED_MAX 3	//Speed en bloc/sec
+#define SPEED_MAX 2	//Speed en bloc/sec
 
 class Trojan
 {

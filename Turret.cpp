@@ -1,15 +1,23 @@
 #include "Turret.h"
 #include "Projectile.h"
 #include "Mortar.h"
+#include "TextureManager.h"
+#include "Spritesheet.h"
+#include "Animation.h"
 
-Turret::Turret(sf::Vector2i pos_, int id_):id(id_),pos(pos_)
+
+
+Turret::Turret(sf::Vector2i pos_,Spritesheet* sprs, int id_):id(id_),pos(pos_),anim(Animation(sprs, CD_AVAST, 2.8125, 2.8125))
 {
+
 	switch (id)
 	{
 	case AVAST:
+		//anim = Animation(&sprsAvast, CD_AVAST, 2.8125, 2.8125);
 		range = RANGE_AVAST;
 		break;
 	case KASPERSKY:
+		//Animation(&sprsAvast, CD_AVAST, 2.8125, 2.8125);
 		range = RANGE_KASPERSKY;
 		break;
 	}
@@ -27,7 +35,8 @@ void Turret::resfresh(sf::Time const& dt)
 	if (coolDown < 0)
 	{
 		coolDown = 0;
-	}
+	}else
+		anim.refresh(dt);
 }
 
 Projectile Turret::createProjectile()
@@ -63,4 +72,11 @@ sf::Vector2f Turret::getPos() const
 float Turret::getRange()
 {
 	return range;
+}
+
+void Turret::beDraw(sf::RenderWindow& rWindow) const
+{
+	sf::Sprite spr = anim.getSprite();
+	spr.setPosition(pos.x * 45,pos.y * 45);
+	rWindow.draw(spr);
 }

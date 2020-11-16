@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include "const.h"
+#include "menu.h"
+#include "TextureManager.h"
 
-#include "header/const.h"
-#include "header/menu.h"
-
-
+extern sf::Font font;
 
 /*
 ------------------------------------TO DO-----------------------------------------------------
@@ -22,135 +22,6 @@ enum e_id_gameMode {
     LOADING,    //Risque de ne pas être utilisé (Pas de chargement nécessaire)
 };
 
-
-int main()
-{
-	sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense");
-    sf::View view(sf::Vector2f(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-    sf::Vector2i posSouris;
-    sf::Event event;
-
-    //-----------------IMAGE BACJGROUND----------------------------
-    sf::Texture img_background;
-	if (!img_background.loadFromFile("./addons/test2.jpg"))
-	{
-		printf("Pb de chargement de l'image.\n");
-	}
-	sf::Sprite background;
-	//background.setScale(0.42f, 0.25f);
-    background.setScale(1, 1);
-	background.setOrigin(0, 0);
-    background.setTexture(img_background);
-
-    //------------------SECOND BACKGROUND------------------------
-    sf::Texture image_regles;
-    if (!image_regles.loadFromFile("./addons/neon_rose.jpg"))
-    {
-        printf("Pb de chargement de l'image.\n");
-    }
-    sf::Sprite background_regles;
-    //background.setScale(0.42f, 0.25f);
-    background_regles.setScale(1, 1);
-    background_regles.setOrigin(0, 0);
-    background_regles.setTexture(image_regles);
-    //-------------FIN IMAGE BACKGROUND----------------------------
-    int gameMode = MENU;
-	while (window.isOpen())
-	{
-		while (window.pollEvent(event))
-		{
-         
-            //-----------------Event Fermeture-------------------
-            if (event.type == sf::Event::Closed)
-            {
-                window.close();
-            }
-
-            //-----------------Event souris-------------------
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    switch (gameMode)
-                    {
-                    case MENU:
-
-                        if (isButtonSelect(window, posSouris, BUTTON_POS_PLAY))
-                        {
-                            printf("On joue ! \n");
-                        }
-                        else if (isButtonSelect(window, posSouris, BUTTON_POS_OPT))
-                        {
-                            printf("Nous sommes dans les options !\n");
-                        }
-                        else if (isButtonSelect(window, posSouris, BUTTON_POS_RGL))
-                        {
-                            gameMode = REGLES;
-                            printf("Voici les règles du jeu !\n");
-                        }
-                        else if (isButtonSelect(window, posSouris, BUTTON_POS_EXT))
-                        {
-                            window.close();
-                        }
-                        break;
-
-                    case REGLES:
-                        if (isButtonSelect(window, posSouris, BUTTON_POS_RET))
-                        {
-                            gameMode = MENU;
-                            printf("Retour au menu ! \n");
-                        }
-                        break;
-
-                    }
-                    
-                }
-            }
-		}
-
-
-        if (window.getSize().x < window.getSize().y)  //redimensionnement par ratio
-        {
-            view.setSize(sf::Vector2f(SCREEN_WIDTH, view.getSize().x * window.getSize().y / window.getSize().x));
-        }
-        else
-        {
-
-            view.setSize(sf::Vector2f(view.getSize().y * window.getSize().x / window.getSize().y, SCREEN_HEIGHT));
-        }
-        int position_reel_y = window.mapPixelToCoords(sf::Mouse::getPosition(window), view).y;
-        int position_reel_x = window.mapPixelToCoords(sf::Mouse::getPosition(window), view).x;
-        posSouris.x = position_reel_x;
-        posSouris.y = position_reel_y;
-        window.setView(view);
-
-        switch (gameMode)
-        {
-        case MENU:
-
-            //--------------REFRESH MENU----------------------
-            //menu.refresh(rWindow,);
-            window.draw(background);
-            beDraw(window, posSouris, view);
-            
-
-            break;
-        case REGLES:
-
-            //--------------REFRESH MENU----------------------
-
-            window.draw(background_regles);
-            drowRegles(window, posSouris, view);
-            
-
-            break;
-        }
-		window.display();
-        window.clear();
-	}
-}
-
 //---------------------------------FONCTIONS---------------------------
 /*
 La fonction dessine : 
@@ -159,7 +30,8 @@ La fonction dessine :
     - Les changements de couleurs des boutons lorsque la souris passes dessus
     - Les changements de couleurs de texte lorsque la souris passe dessus ( /!\ TO DO /!\ )
 */
-void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
+
+void drawMenu(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
 {
     //Création button Play
     sf::RectangleShape buttonPlay(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
@@ -181,8 +53,6 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     sf::FloatRect buttonExitRect = buttonExit.getLocalBounds();
     buttonExit.setOrigin(buttonExitRect.width / 2.0f, buttonExitRect.height / 2.0f);
 
-    sf::Font font;
-    sf::Font font2;
     sf::Text textTitre;
     sf::Text textJouer;
     sf::Text textOption;
@@ -190,21 +60,14 @@ void beDraw(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     sf::Text textExit;
 
     //INITIALISATION
-    textTitre.setFont(font2);
-    textJouer.setFont(font2);
-    textOption.setFont(font2);
-    textRegles.setFont(font2);
-    textExit.setFont(font2);
+    textTitre.setFont(font);
+    textJouer.setFont(font);
+    textOption.setFont(font);
+    textRegles.setFont(font);
+    textExit.setFont(font);
 
     //--------------------POLICE-------------------------
-    if (!font.loadFromFile("./addons/font.ttf")) {
 
-        printf("Impossible de charger les font.\n");
-    }
-    if (!font2.loadFromFile("./addons/font2.ttf")) {
-
-        printf("Impossible de charger les font.\n");
-    }
     //DEBUT TITRE
     textTitre.setString("Firewall-Defense");
     textTitre.setCharacterSize(100);
@@ -305,26 +168,16 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
     sf::FloatRect buttonRetourRect = buttonRetour.getLocalBounds();
     buttonRetour.setOrigin(buttonRetourRect.width / 2.0f, buttonRetourRect.height / 2.0f);
 
-    sf::Font font;
-    sf::Font font2;
     sf::Text textTitre;
     sf::Text textRetour;
     sf::Text textRegles;
 
     //INITIALISATION
-    textTitre.setFont(font2);
-    textRetour.setFont(font2);
-    textRegles.setFont(font2);
+    textTitre.setFont(font);
+    textRetour.setFont(font);
+    textRegles.setFont(font);
 
     //--------------------POLICE-------------------------
-    if (!font.loadFromFile("./addons/font.ttf")) {
-
-        printf("Impossible de charger la font1.\n");
-    }
-    if (!font2.loadFromFile("./addons/font2.ttf")) {
-
-        printf("Impossible de charger la font2.\n");
-    }
 
     //DEBUT TITRE
     textTitre.setString("Firewall-Defense");

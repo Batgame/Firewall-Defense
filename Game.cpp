@@ -3,23 +3,20 @@
 #include "Turret.h"
 #include <iostream>
 #include <math.h>
+#include <SFML/System.hpp>
 
 float getDistance(sf::Vector2f a, sf::Vector2f b);
 
-Game::Game(int map_) : map(map_),money(500)
+Game::Game(int map_) : map(map_), money(500), level(1),trojanCount(8),sprsAvast(Spritesheet("addons/Avast.png",10,1))
 {
 	Road::createMap(roads,map);
-
-	for (int i = 0; i < 8; ++i)
-	{
-		trojans.push_back(Trojan(sf::Vector2f(0.5, 4.5), RIGHT,20));
-	}
 
 	switch (map)
 	{
 	case 1:
-		turrets.push_back(Turret(sf::Vector2i(7, 6), AVAST));
-		turrets.push_back(Turret(sf::Vector2i(13,4), KASPERSKY));
+		std::cout << "Map loading..." << std::endl;
+		turrets.push_back(Turret(sf::Vector2i(7, 6),&sprsAvast, AVAST));
+		turrets.push_back(Turret(sf::Vector2i(13,4), &sprsAvast, KASPERSKY));
 		break;
 	case 2:
 
@@ -29,16 +26,39 @@ Game::Game(int map_) : map(map_),money(500)
 		break;
 	case 3:
 
-
-
-
 		break;
 
 	}
 }
 
-void Game::refresh(sf::Time const& dt)
+void Game::refresh(sf::Time& dt)
 {
+	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{ 
+		dt *= 5.f;
+	}
+
+	//-------------SPAWN PART ---------------------
+	delaySpawn -= dt.asSeconds();
+	if (delaySpawn < 0) delaySpawn = 0;
+
+	if (delaySpawn == 0)
+	{
+		if (trojanCount > 0)
+		{
+			trojanCount--;
+			delaySpawn = DELAY_SPAWN;
+			switch (map)
+			{
+				case 1: 
+					trojans.push_back(Trojan(sf::Vector2f(0.5,4.5),1,30));
+					break;
+			}
+		}
+	}
+
+
+
 	for (int i = 0; i < trojans.size(); ++i)
 	{
 		trojans[i].refresh(dt,roads);
@@ -94,7 +114,7 @@ void Game::refresh(sf::Time const& dt)
 	}
 
 	//Kill
-
+	if (trojans.size() == 0) {projectiles.clear();}
 	for (int i = 0; i < projectiles.size(); ++i)
 	{
 		if (!projectiles[i].isAlive() || projectiles[i].getPos().x < 0 || projectiles[i].getPos().y > 40 || projectiles[i].getPos().y < 0 || projectiles[i].getPos().y > 40)
@@ -165,6 +185,10 @@ void Game::beDraw(sf::RenderWindow& rWindow) const
 	for (int i = 0; i < mortars.size(); i++)
 	{
 		mortars[i].beDraw(rWindow);
+	}
+	for (int i = 0; i < turrets.size(); i++)
+	{
+		turrets[i].beDraw(rWindow);
 	}
 }
 
