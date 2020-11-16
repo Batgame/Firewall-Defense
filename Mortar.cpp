@@ -1,5 +1,5 @@
-#include "Mortar.h"
-#include "Projectile.h"
+#include "header/Mortar.h"
+#include "header/Projectile.h"
 
 Mortar::Mortar(sf::Vector2f pos_, sf::Vector2f aim_, int damage_):pos(pos_),damage(damage_),velocity(sf::Vector2f(aim_.x - pos.x, aim_.y - pos.y)),flightDuration(0),radius(1)
 {

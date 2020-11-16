@@ -1,5 +1,5 @@
-#include "Animation.h"
-#include "Spritesheet.h"
+#include "header/Animation.h"
+#include "header/Spritesheet.h"
 #include <SFML/Graphics.hpp>
 
 Animation::Animation(Spritesheet* sprs_, float duration_, float scaleX_, float scaleY_) : sprs(sprs_), duration(duration_),timer(0),scaleX(scaleX_), scaleY(scaleY_)

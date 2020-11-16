@@ -1,9 +1,9 @@
-#include "USBKiller.h"
-#include "Road.h"
+#include "header/USBKiller.h"
+#include "header/Road.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Spritesheet.h"
-#include "Animation.h" 
+#include "header/Spritesheet.h"
+#include "header/Animation.h" 
 
 USBKiller::USBKiller(Spritesheet* sprs,sf::Vector2f pos_, int direction) :pos(pos_), hp(HP), distanceToWalk(0), speed(SPEED_MAX),anim(Animation(sprs,0.5,1,1))
 {

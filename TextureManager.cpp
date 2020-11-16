@@ -1,7 +1,7 @@
-#include "TextureManager.h"
+#include "header/TextureManager.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "Spritesheet.h"
+#include "header/Spritesheet.h"
 
 sf::Font font;
 

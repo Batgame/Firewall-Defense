@@ -8,6 +8,9 @@
 #include "header/menu.h"
 #include "header/const.h"
 #include "header/TextureManager.h"
+#include "header/Shop.h"
+#include "header/constShop.h"
+
 
 /*
 							ENUMERATION :
@@ -28,23 +31,27 @@ enum e_id_gamemode {
 
 int main()
 {
-    std::cout << "Hey" << std::endl;
-
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense");
+    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense",sf::Style::Close);
     sf::View view(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
     sf::Vector2i posSouris;
+    sf::Vector2i mousePos;
     sf::Event event;
     Game game(1);
     sf::Clock clock;
     sf::Time dt;
     TextureManager::loadAllFont();
-    bool flagClickLeft = true;
-    bool flagClickRight = true;
+    bool flagClickLeft = false;
+    bool flagClickRight = false;
+    bool flag = false;
+    bool flagEscape = false;
+    int turretSel = 0;
+    Shop magasin;
+
     game.setSelectedTurret(AVAST);
 
     //-----------------IMAGE BACJGROUND----------------------------
     sf::Texture img_background;
-    if (!img_background.loadFromFile("./addons/test.png"))
+    if (!img_background.loadFromFile("./addons/background_menu.png"))
     {
         std::cout << "Pb de chargement de l'image.\n" << std::endl;
     }
@@ -117,9 +124,30 @@ int main()
                         }
                         break;
 
+                        break;
                     }
                 }
             }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            {
+                if (flagEscape)
+                {
+                    if (gameMode == INGAME)
+                    {
+                        gameMode = MENU;
+                    }
+                    else
+                    {
+                        window.close();
+                    }
+                    flagEscape = false;
+                }
+            }
+            else
+            {
+                flagEscape = true;
+            }
+
         }
 
         dt = clock.restart();
@@ -134,12 +162,14 @@ int main()
             view.setSize(sf::Vector2f(view.getSize().y * window.getSize().x / window.getSize().y, SCREEN_HEIGHT));
         }
 
+
+
+
         int position_reel_y = window.mapPixelToCoords(sf::Mouse::getPosition(window), view).y;
         int position_reel_x = window.mapPixelToCoords(sf::Mouse::getPosition(window), view).x;
         posSouris.x = position_reel_x;
         posSouris.y = position_reel_y;
         window.setView(view);
-
 
         switch (gameMode)
         {
@@ -165,17 +195,30 @@ int main()
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
-                if (flagClickLeft)
+                //------------SHOP----------------------
+                if (position_reel_x >= (BUTTON_POS.x - (0.5 * BUTTON_SIZE.x)) && position_reel_x <= BUTTON_POS.x + (0.5 * BUTTON_SIZE.x) && position_reel_y >= (BUTTON_POS.y - 0.5 * BUTTON_SIZE.y) && position_reel_y <= BUTTON_POS.y + 0.5 * BUTTON_SIZE.y) //sont dedans
                 {
-                    game.buyTurret(posSouris.x,posSouris.y,window,view);
+                    if (flag)
+                    {
+                        magasin.switchActive();
+                        flag = false;
+                    }
+                }
+                //----------------------------ACHAT TOURELLE-----------------------
+                else if (flagClickLeft && !magasin.isOpenMenu())
+                {
+                    game.buyTurret(posSouris.x, posSouris.y, window, view);
                     flagClickLeft = false;
                 }
+                mousePos = sf::Mouse::getPosition(window);
+                magasin.turretSelect(window, mousePos, turretSel);
+                game.setSelectedTurret(turretSel);
             }
             else
             {
+                flag = true;
                 flagClickLeft = true;
             }
-
 
             //------------------Vente TOURELLE
 
@@ -194,8 +237,14 @@ int main()
             }
 
             game.refresh(dt);
-            game.beDraw(window);
+            game.beDraw(window,view);
+            magasin.beDraw(window, view);
+            if(magasin.isOpenMenu())
+            {
+                magasin.turretExplain(window, turretSel);
+            }
             break;
+
         }
         window.display();
         window.clear();

@@ -1,8 +1,8 @@
-#include "Trojan.h"
-#include "Road.h"
+#include "header/Trojan.h"
+#include "header/Road.h"
 #include <SFML/Graphics.hpp>
-#include "Spritesheet.h"
-#include "Animation.h"
+#include "header/Spritesheet.h"
+#include "header/Animation.h"
 
 Trojan::Trojan(Spritesheet *sprs,sf::Vector2f pos_, int direction_, int hp_):pos(pos_),hp(hp_),distanceToWalk(0),speed(SPEED_MAX),anim(Animation(sprs,0.7)),direction(direction_)
 {
@@ -71,6 +71,12 @@ void Trojan::beDraw(sf::RenderWindow& rWindow) const
 
 	spr.setPosition(pos.x * 45, pos.y * 45);
 
+	sf::RectangleShape r(sf::Vector2f(hp * 2,3));
+	r.setOrigin(hp, 1.5);
+	r.setPosition(pos.x * 45, (pos.y + 0.3) * 45);
+	r.setFillColor(sf::Color::Red);
+
+	rWindow.draw(r);
 	rWindow.draw(spr);
 }
 

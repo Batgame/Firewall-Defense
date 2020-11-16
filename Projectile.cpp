@@ -1,4 +1,4 @@
-#include "Projectile.h"
+#include "header/Projectile.h"
 #define PI 3.14159265358979323
 
 Projectile::Projectile(sf::Vector2f pos_, int id_,int damage_ ,float speedMax_) : pos(pos_), speedMax(speedMax_), id(id_), alive(true),damage(damage_)

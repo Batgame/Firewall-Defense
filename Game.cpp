@@ -1,13 +1,14 @@
-#include "Game.h"
-#include "Road.h"
-#include "Turret.h"
+#include "header/Game.h"
+#include "header/Road.h"
+#include "header/Turret.h"
 #include <iostream>
 #include <math.h>
 #include <SFML/System.hpp>
+#include "header/Shop.h"
 
 float getDistance(sf::Vector2f a, sf::Vector2f b);
 
-Game::Game(int map_) : map(map_), money(500), level(0),trojanCount(0),sprsAvast(Spritesheet("addons/Avast.png",11,1)),sprsKaspersky(Spritesheet("addons/Kaspersky.png",9,1)),delayWave(DELAY_WAVE)
+Game::Game(int map_) : map(map_), money(50000000), level(0),trojanCount(0),sprsAvast(Spritesheet("addons/Avast.png",11,1)),sprsKaspersky(Spritesheet("addons/Kaspersky.png",9,1)),delayWave(DELAY_WAVE)
 , sprsUSBKillers(Spritesheet("addons/usb_killer.png", 4, 1)),sprsTrojan(Spritesheet("addons/Trojan.png",5,1))
 {
 	bg.loadFromFile("addons/ingameBackground.jpg");
@@ -272,7 +273,7 @@ void Game::buyTurret(int& mouseX, int& mouseY,sf::RenderWindow& rWindow, sf::Vie
 	{
 		switch (selectedTurret)
 		{
-		case AVAST:
+		case AVAST_SHOP:
 			if (money >= AVAST_PRICE)
 			{
 				money -= AVAST_PRICE;
@@ -286,19 +287,32 @@ void Game::buyTurret(int& mouseX, int& mouseY,sf::RenderWindow& rWindow, sf::Vie
 					}
 				}
 				if(validPlace)
-				turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsAvast, AVAST));
-
+				turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsAvast, AVAST_SHOP));
 			}
 			break;
-		case KASPERSKY:
+		case KASPERSKY_SHOP:
 			if (money >= KASPERSKY_PRICE)
-				turrets.push_back(Turret(sf::Vector2i(posX, posY),&sprsKaspersky, KASPERSKY));
+			{
+				money -= KASPERSKY_PRICE;
+				bool validPlace = true;
+				for (int i = 0; i < turrets.size(); ++i)
+				{
+					if (turrets[i].getPos() == sf::Vector2f(posX, posY))
+					{
+						i = turrets.size();
+						validPlace = false;
+					}
+				}
+				if (validPlace)
+					turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsKaspersky, KASPERSKY_SHOP));
+
+			}
 			break;
 		}
 	}
 }
 
-void Game::sellTurret(int& mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::View view)
+void Game::sellTurret(int &mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::View view)
 {
 	int posX = int(rWindow.mapPixelToCoords(sf::Mouse::getPosition(rWindow), view).x / 45);
 	int posY = int(rWindow.mapPixelToCoords(sf::Mouse::getPosition(rWindow), view).y / 45);
@@ -310,10 +324,10 @@ void Game::sellTurret(int& mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::V
 		{
 			switch (turrets[i].id)
 			{
-			case AVAST:
+			case AVAST_SHOP:
 				money += AVAST_PRICE/2;
 				break;
-			case KASPERSKY:
+			case KASPERSKY_SHOP:
 				money += KASPERSKY_PRICE / 2;
 				break;
 			}
@@ -354,9 +368,7 @@ void Game::levelUp()
 		case 2:
 			trojanCount = 4;
 			break;
-
 		}
-
 	}
 
 
