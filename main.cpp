@@ -1,13 +1,13 @@
 #include <iostream>
 #include <SFML/graphics.hpp>
 #include <SFML/System.hpp>
-#include "Road.h"
-#include "Trojan.h"
-#include "Game.h"
-#include "const.h"
-#include "menu.h"
-#include "const.h"
-#include "TextureManager.h"
+#include "header/Road.h"
+#include "header/Trojan.h"
+#include "header/Game.h"
+#include "header/const.h"
+#include "header/menu.h"
+#include "header/const.h"
+#include "header/TextureManager.h"
 
 /*
 							ENUMERATION :
@@ -28,6 +28,8 @@ enum e_id_gamemode {
 
 int main()
 {
+    std::cout << "Hey" << std::endl;
+
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense");
     sf::View view(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
     sf::Vector2i posSouris;
@@ -39,15 +41,16 @@ int main()
     bool flagClickLeft = true;
     bool flagClickRight = true;
     game.setSelectedTurret(AVAST);
+
     //-----------------IMAGE BACJGROUND----------------------------
     sf::Texture img_background;
-    if (!img_background.loadFromFile("./addons/test2.jpg"))
+    if (!img_background.loadFromFile("./addons/test.png"))
     {
         std::cout << "Pb de chargement de l'image.\n" << std::endl;
     }
     sf::Sprite background;
     //background.setScale(0.42f, 0.25f);
-    background.setScale(1, 1);
+    background.setScale(sf::Vector2f(view.getSize().x / img_background.getSize().x, view.getSize().y / img_background.getSize().y));
     background.setOrigin(0, 0);
     background.setTexture(img_background);
 
@@ -62,8 +65,6 @@ int main()
     background_regles.setScale(1, 1);
     background_regles.setOrigin(0, 0);
     background_regles.setTexture(image_regles);
-
-
     //-------------FIN IMAGE BACKGROUND----------------------------
     int gameMode = MENU;
     while (window.isOpen())
@@ -108,6 +109,7 @@ int main()
                         break;
 
                     case REGLES:
+
                         if (isButtonSelect(window, posSouris, BUTTON_POS_RET))
                         {
                             gameMode = MENU;
@@ -146,7 +148,6 @@ int main()
             //--------------REFRESH MENU----------------------
             //menu.refresh(rWindow,);
             background.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
-            background.setScale(view.getSize().x / img_background.getSize().x, view.getSize().y / img_background.getSize().y);
             window.draw(background);
             drawMenu(window, posSouris, view);
 
@@ -155,12 +156,11 @@ int main()
 
             //--------------REFRESH MENU----------------------
             background_regles.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
-            window.draw(background_regles);
+            window.draw(background);
             drowRegles(window, posSouris, view);
 
             break;
         case INGAME:
-
             //------------------Achat TOURELLE
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
@@ -192,8 +192,9 @@ int main()
             {
                 flagClickRight = true;
             }
+
             game.refresh(dt);
-            game.beDraw(window,view);
+            game.beDraw(window);
             break;
         }
         window.display();

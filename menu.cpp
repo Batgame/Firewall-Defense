@@ -1,9 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include "const.h"
-#include "menu.h"
-#include "TextureManager.h"
+#include "header/const.h"
+#include "header/menu.h"
+#include "header/TextureManager.h"
 
 extern sf::Font font;
 
@@ -112,10 +112,10 @@ void drawMenu(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     //----------------FIN POLICE-------------------------
 
 
-    buttonPlay.setFillColor(sf::Color(11, 46, 150));
-    buttonOptions.setFillColor(sf::Color(11, 46, 150));
-    buttonRegles.setFillColor(sf::Color(11, 46, 150));
-    buttonExit.setFillColor(sf::Color(11, 46, 150));
+    buttonPlay.setFillColor(sf::Color(32, 32, 32));
+    buttonOptions.setFillColor(sf::Color(32, 32, 32));
+    buttonRegles.setFillColor(sf::Color(32, 32, 32));
+    buttonExit.setFillColor(sf::Color(32, 32, 32));
 
 
 
@@ -123,22 +123,22 @@ void drawMenu(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     //--------------------TEST SI LA SOURIS PASSE SUR LE TEXTE------------------------------
     if (isButtonSelect(window, posSouris, BUTTON_POS_PLAY))
     {
-        buttonPlay.setFillColor(sf::Color::Black);
+        buttonPlay.setFillColor(sf::Color(24, 26, 27));
         textJouer.setFillColor(sf::Color::White);
     }
     else if (isButtonSelect(window, posSouris, BUTTON_POS_OPT))
     {
-        buttonOptions.setFillColor(sf::Color::Black);
+        buttonOptions.setFillColor(sf::Color(24, 26, 27));
         textOption.setFillColor(sf::Color::White);
     }
     else if (isButtonSelect(window, posSouris, BUTTON_POS_RGL))
     {
-        buttonRegles.setFillColor(sf::Color::Black);
+        buttonRegles.setFillColor(sf::Color(24, 26, 27));
         textRegles.setFillColor(sf::Color::White);
     }
     else if (isButtonSelect(window, posSouris, BUTTON_POS_EXT))
     {
-        buttonExit.setFillColor(sf::Color::Black);
+        buttonExit.setFillColor(sf::Color(24, 26, 27));
         textExit.setFillColor(sf::Color::White);
     }
 
@@ -150,12 +150,12 @@ void drawMenu(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view)
     
     //On dessine tout sur la fenêtre 
     window.draw(buttonPlay);
-    window.draw(buttonOptions);
+    //window.draw(buttonOptions);
     window.draw(buttonRegles);
     window.draw(buttonExit);
     window.draw(textTitre);
     window.draw(textJouer);
-    window.draw(textOption);
+    //window.draw(textOption);
     window.draw(textRegles);
     window.draw(textExit);
 }
@@ -190,10 +190,10 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
 
     //DEBUT MENU
     //-----------Regles----------------
-    textRegles.setString("Firewall défense est un jeu basé sur le concept de Tower Defense.\n\nVotre but est de défendre l'entrée de virus et les empêcher d'arriver à la \nfin du chemin. Pour cela, vous pouvez construire des tours aux capacités \ndifférentes pour défendre votre chemin.Attention, si vous laissez passer \ntrop de virus, ils détruiront votre système d'exploitation.\n\nBonne chance !");
-    textRegles.setCharacterSize(25);
+    textRegles.setString("Firewall défense est un jeu basé sur le concept de Tower Defense.\n\nVotre but est de défendre l'entrée de virus et les empêcher\nd'arriver à la fin du chemin. Pour cela, vous pouvez construire\ndes tours aux capacités différentes pour défendre votre\nchemin. Attention, si vous laissez passer trop de virus, ils\ndétruiront votre système d'exploitation.\n\nBonne chance !");
+    textRegles.setCharacterSize(20);
     //textRegles.setFillColor(sf::Color(249, 129, 58));
-    textRegles.setFillColor(sf::Color::White);
+    textRegles.setFillColor(sf::Color(221, 219, 219));
     //sf::FloatRect reglesRect = textRegles.getLocalBounds();
     //textRegles.setOrigin(reglesRect.width / 2.0f, reglesRect.height / 2.0f);
     textRegles.setPosition(TEXT_REGLES_POS);
@@ -208,13 +208,13 @@ void drowRegles(sf::RenderWindow& window, sf::Vector2i& posSouris, sf::View view
     //FIN MENU
     //----------------FIN POLICE-------------------------
 
-    buttonRetour.setFillColor(sf::Color(11, 46, 150));
+    buttonRetour.setFillColor(sf::Color(32, 32, 32));
 
     //--------------------TEST SI LA SOURIS PASSE SUR LE TEXTE------------------------------
 
     if (isButtonSelect(window, posSouris, BUTTON_POS_RET))
     {
-        buttonRetour.setFillColor(sf::Color::Black);
+        buttonRetour.setFillColor(sf::Color(24, 26, 27));
         textRetour.setFillColor(sf::Color::White);
     }
 
