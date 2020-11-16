@@ -7,6 +7,21 @@ Animation::Animation(Spritesheet* sprs_, float duration_, float scaleX_, float s
 	
 }
 
+void Animation::setDuration(float const& duration_)
+{
+	duration = duration_;
+}
+
+void Animation::setTimer(float const& timer_)
+{
+	timer = timer_;
+}
+
+float Animation::getTimer() const
+{
+	return timer;
+}
+
 void Animation::refresh(sf::Time dt)
 {
 	timer += dt.asSeconds();

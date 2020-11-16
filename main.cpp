@@ -28,8 +28,6 @@ enum e_id_gamemode {
 
 int main()
 {
-    std::cout << "Hey" << std::endl;
-
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Firewall-Defense");
     sf::View view(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
     sf::Vector2i posSouris;
@@ -38,7 +36,9 @@ int main()
     sf::Clock clock;
     sf::Time dt;
     TextureManager::loadAllFont();
-
+    bool flagClickLeft = true;
+    bool flagClickRight = true;
+    game.setSelectedTurret(AVAST);
     //-----------------IMAGE BACJGROUND----------------------------
     sf::Texture img_background;
     if (!img_background.loadFromFile("./addons/test2.jpg"))
@@ -62,6 +62,8 @@ int main()
     background_regles.setScale(1, 1);
     background_regles.setOrigin(0, 0);
     background_regles.setTexture(image_regles);
+
+
     //-------------FIN IMAGE BACKGROUND----------------------------
     int gameMode = MENU;
     while (window.isOpen())
@@ -144,6 +146,7 @@ int main()
             //--------------REFRESH MENU----------------------
             //menu.refresh(rWindow,);
             background.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
+            background.setScale(view.getSize().x / img_background.getSize().x, view.getSize().y / img_background.getSize().y);
             window.draw(background);
             drawMenu(window, posSouris, view);
 
@@ -157,8 +160,40 @@ int main()
 
             break;
         case INGAME:
+
+            //------------------Achat TOURELLE
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+            {
+                if (flagClickLeft)
+                {
+                    game.buyTurret(posSouris.x,posSouris.y,window,view);
+                    flagClickLeft = false;
+                }
+            }
+            else
+            {
+                flagClickLeft = true;
+            }
+
+
+            //------------------Vente TOURELLE
+
+
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+            {
+                if (flagClickRight)
+                {
+                    game.sellTurret(posSouris.x, posSouris.y, window, view);
+                    flagClickRight = false;
+                }
+            }
+            else
+            {
+                flagClickRight = true;
+            }
             game.refresh(dt);
-            game.beDraw(window);
+            game.beDraw(window,view);
             break;
         }
         window.display();

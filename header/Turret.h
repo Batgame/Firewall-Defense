@@ -6,17 +6,16 @@
 enum e_id_Turret
 {
 	AVAST, //Tourelle Rapid mais peu de dégat
-	AVIRA, 
 	WINDOW_DEFENDER,
 	KASPERSKY
 };
 
 #define CD_AVAST 0.3f
-#define DMG_AVAST 1
+#define DMG_AVAST 2
 #define RANGE_AVAST 3
 
 #define CD_KASPERSKY 2
-#define DMG_KASPERSKY 10
+#define DMG_KASPERSKY 13
 #define RANGE_KASPERSKY 6
 
 class Turret

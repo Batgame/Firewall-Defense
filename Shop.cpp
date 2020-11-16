@@ -33,7 +33,6 @@ Shop::Shop() :isActive(0), money(500)
 	shopNoDeve = sf::RectangleShape(sf::Vector2f(70, 70));
 	sf::FloatRect buttonShopRect = shopNoDeve.getLocalBounds();
 	shopNoDeve.setOrigin(buttonShopRect.width / 2.0f, buttonShopRect.height / 2.0f);
-	
 }
 
 

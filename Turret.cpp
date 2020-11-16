@@ -9,19 +9,18 @@
 
 Turret::Turret(sf::Vector2i pos_,Spritesheet* sprs, int id_):id(id_),pos(pos_),anim(Animation(sprs, CD_AVAST, 2.8125, 2.8125))
 {
-
 	switch (id)
 	{
 	case AVAST:
-		//anim = Animation(&sprsAvast, CD_AVAST, 2.8125, 2.8125);
 		range = RANGE_AVAST;
 		break;
 	case KASPERSKY:
-		//Animation(&sprsAvast, CD_AVAST, 2.8125, 2.8125);
+		anim.setDuration(CD_KASPERSKY);
 		range = RANGE_KASPERSKY;
 		break;
 	}
 }
+
 
 bool Turret::canShoot()
 {
@@ -31,12 +30,14 @@ bool Turret::canShoot()
 void Turret::resfresh(sf::Time const& dt)
 {
 	coolDown -= dt.asSeconds();
-	
+
 	if (coolDown < 0)
 	{
 		coolDown = 0;
-	}else
-		anim.refresh(dt);
+		anim.setTimer(0);
+	}else 
+	anim.refresh(dt);
+
 }
 
 Projectile Turret::createProjectile()
@@ -47,10 +48,6 @@ Projectile Turret::createProjectile()
 	case AVAST:
 		projectile = Projectile(pos.x + 0.5, pos.y + 0.5,DMG_AVAST,AVAST_BULLET);
 			coolDown = CD_AVAST;
-		break;
-
-	case AVIRA:
-
 		break;
 	}
 	return projectile;
@@ -77,6 +74,6 @@ float Turret::getRange()
 void Turret::beDraw(sf::RenderWindow& rWindow) const
 {
 	sf::Sprite spr = anim.getSprite();
-	spr.setPosition(pos.x * 45,pos.y * 45);
+	spr.setPosition(pos.x * 45, pos.y * 45);
 	rWindow.draw(spr);
 }

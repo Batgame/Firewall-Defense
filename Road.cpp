@@ -60,23 +60,33 @@ void Road::createMap(std::vector<Road>& map, int id)
 	{
 	case 1:// MAP 1
 		//-----------------------------------TO DO--------------------------------
-		Road::drawLine(map, sf::Vector2f(0, 4), sf::Vector2f(3, 4));
-		Road::drawLine(map, sf::Vector2f(4, 4), sf::Vector2f(4, 11));
-		Road::drawLine(map, sf::Vector2f(4, 12), sf::Vector2f(2, 12));
-		Road::drawLine(map, sf::Vector2f(1, 12), sf::Vector2f(1, 13));
-		Road::drawLine(map, sf::Vector2f(1, 14), sf::Vector2f(8, 14));
-		Road::drawLine(map, sf::Vector2f(9, 14), sf::Vector2f(9, 8));
-		Road::drawLine(map, sf::Vector2f(9, 7), sf::Vector2f(7, 7));
-		Road::drawLine(map, sf::Vector2f(6, 7), sf::Vector2f(6, 6));
-		Road::drawLine(map, sf::Vector2f(6, 5), sf::Vector2f(11, 5));
-		Road::drawLine(map, sf::Vector2f(12, 5), sf::Vector2f(12, 4));
-		Road::drawLine(map, sf::Vector2f(14, 3), sf::Vector2f(14, 10));
-		Road::drawLine(map, sf::Vector2f(14, 11), sf::Vector2f(19, 11));
+		Road::drawLine(map, sf::Vector2f(0, 6), sf::Vector2f(2, 6));
+		Road::drawLine(map, sf::Vector2f(3, 6), sf::Vector2f(3, 5));//chemin du haut
+		Road::drawLine(map, sf::Vector2f(3, 6), sf::Vector2f(3, 7));//chemin du bas
+		Road::drawLine(map, sf::Vector2f(3, 8), sf::Vector2f(6, 8));
+		Road::drawLine(map, sf::Vector2f(7, 8), sf::Vector2f(7, 7));
+		Road::drawLine(map, sf::Vector2f(3, 4), sf::Vector2f(6, 4));
+		Road::drawLine(map, sf::Vector2f(7, 4), sf::Vector2f(7, 5));
+		Road::drawLine(map, sf::Vector2f(7, 6), sf::Vector2f(9, 6));
+		Road::drawLine(map, sf::Vector2f(10, 6), sf::Vector2f(10, 8));
+		Road::drawLine(map, sf::Vector2f(10, 9), sf::Vector2f(12, 9));
+		Road::drawLine(map, sf::Vector2f(13, 9), sf::Vector2f(13, 3));
+		Road::drawLine(map, sf::Vector2f(13, 2), sf::Vector2f(15, 2));
+		Road::drawLine(map, sf::Vector2f(16, 2), sf::Vector2f(16, 6));
+		Road::drawLine(map, sf::Vector2f(16, 7), sf::Vector2f(17, 7));
+		Road::drawLine(map, sf::Vector2f(18, 7), sf::Vector2f(18, 12));
+		Road::drawLine(map, sf::Vector2f(18, 13), sf::Vector2f(20, 13));
+		Road::drawLine(map, sf::Vector2f(21, 13), sf::Vector2f(21, 8));
+		Road::drawLine(map, sf::Vector2f(21, 7), sf::Vector2f(22, 7));
+		Road::drawLine(map, sf::Vector2f(23, 7), sf::Vector2f(23, 6));//chemin du haut
+		Road::drawLine(map, sf::Vector2f(23, 5), sf::Vector2f(24, 5));
+		Road::drawLine(map, sf::Vector2f(23, 7), sf::Vector2f(23, 8));// chemin du bas
+		Road::drawLine(map, sf::Vector2f(23, 9), sf::Vector2f(24, 9));
+		Road::drawLine(map, sf::Vector2f(25, 5), sf::Vector2f(25, 11));
+		Road::drawLine(map, sf::Vector2f(25, 12), sf::Vector2f(27, 12));
 
-		//----RACCOURCI----
-		Road::drawLine(map, sf::Vector2f(4,3), sf::Vector2f(13, 3));
-		//----INTERSECTION
-		map[getId(map,sf::Vector2i(4,4))].addNextDirection(UP);
+		map[getId(map, sf::Vector2i(3, 6))].addNextDirection(DOWN);
+		map[getId(map, sf::Vector2i(23, 7))].addNextDirection(DOWN);
 		break;
 	}
 }
@@ -136,7 +146,7 @@ int Road::getNextRoad() const
 void Road::beDraw(sf::RenderWindow& rWindow) const
 {
 	sf::RectangleShape r;
-	r.setSize(sf::Vector2f(43, 43));
+	r.setSize(sf::Vector2f(45, 45));
 	r.setPosition(pos.x * 45, pos.y * 45);
 	r.setFillColor(sf::Color(0, 113, 202));
 
