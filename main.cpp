@@ -18,7 +18,7 @@ int main()
 	bool flag = false;
 	bool isActive = 0;
 	mousePos = sf::Mouse::getPosition(window);
-
+	int turretSel = 0;
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
@@ -56,6 +56,9 @@ int main()
 							flag = true;
 						}
 					}
+					mousePos = sf::Mouse::getPosition(window);
+					turretSel = magasin.turretSelect(window, mousePos, turretSel);
+
 				}
 			}
 		}
@@ -71,10 +74,13 @@ int main()
 		jeu.setPosition(0, 0);
 		window.draw(jeu);
 
+
+
 		if(flag == true )
 		{
 			isActive = true;
 			magasin.beDraw(window, mousePos, isActive, dt);
+			magasin.turretExplain(window, turretSel);
 		}
 		else {
 			isActive = false;
