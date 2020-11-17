@@ -1,5 +1,7 @@
 #include "header/constShop.h"
 #include "header/Shop.h"
+#include "header/game.h"
+#include <string>
 
 
 Shop::Shop() :isActive(0), money(500)
@@ -235,7 +237,6 @@ void Shop::turretExplain(sf::RenderWindow& window, int turretSelect)
 	sf::Text textExplainTurret3;
 	sf::Text textExplainTurret4;
 
-	sf::CircleShape cercle(10.f);
 
 	textExplainEmpty.setFont(font);
 	textExplainTurret1.setFont(font);
@@ -253,7 +254,7 @@ void Shop::turretExplain(sf::RenderWindow& window, int turretSelect)
 	if (turretSelect == AVAST_SHOP)
 	{
 		// --------------EXPLICATION TOURELLE 1--------------------
-		textExplainTurret1.setString("Avast : Défense basique. \nCadence rapide mais \nfaible dégats");
+		textExplainTurret1.setString("Avast : Défense basique. \nCadence rapide mais \nfaible dégats.\n\nCout : $" + std::to_string(AVAST_PRICE));
 		textExplainTurret1.setCharacterSize(14);
 		textExplainTurret1.setFillColor(sf::Color::Black);
 		//sf::FloatRect explainRect1 = textExplainTurret1.getLocalBounds();
@@ -262,12 +263,11 @@ void Shop::turretExplain(sf::RenderWindow& window, int turretSelect)
 		textExplainTurret1.setPosition(EXPLAIN_TEXT_POS);
 
 		window.draw(textExplainTurret1);
-		window.draw(cercle);
 	}
 	else if (turretSelect == KASPERSKY_SHOP)
 	{
 		// --------------EXPLICATION TOURELLE 2--------------------
-		textExplainTurret2.setString("Kaspersky : Défense lourde. \nTir de puissants mortiers \nà faible cadence.");
+		textExplainTurret2.setString("Kaspersky : Défense lourde. \nTir de puissants mortiers \nà faible cadence.\n\nCout : $" + std::to_string(KASPERSKY_PRICE));
 		textExplainTurret2.setCharacterSize(14);
 		textExplainTurret2.setFillColor(sf::Color::Black);
 		//sf::FloatRect explainRect2 = textExplainTurret2.getLocalBounds();
@@ -278,7 +278,7 @@ void Shop::turretExplain(sf::RenderWindow& window, int turretSelect)
 	else if (turretSelect == DEFENDER_SHOP)
 	{
 		// --------------EXPLICATION TOURELLE 3--------------------
-		textExplainTurret3.setString("Defender : Défense legère.\nFais des dégats sur une \ncourte portée autour de lui");
+		textExplainTurret3.setString("Defender : Défense legère.\nFais des dégats sur une \ncourte portée autour de lui.\n\nCout : $" + std::to_string(DEFENDER_PRICE));
 		textExplainTurret3.setCharacterSize(14);
 		textExplainTurret3.setFillColor(sf::Color::Black);
 		//sf::FloatRect explainRect3 = textExplainTurret3.getLocalBounds();
@@ -289,7 +289,7 @@ void Shop::turretExplain(sf::RenderWindow& window, int turretSelect)
 	else if (turretSelect == MCAFEE_SHOP)
 	{
 		// --------------EXPLICATION TOURELLE 4--------------------
-		textExplainTurret4.setString("Mc Afee : Défense lourde. \nInflige des dégats à tous les \nvirus présent sur le chemin");
+		textExplainTurret4.setString("Mc Afee : Défense lourde. \nInflige des dégats à tous les \nvirus présent sur le chemin.\n\nCout : $" + std::to_string(MCAFEE_PRICE));
 		textExplainTurret4.setCharacterSize(14);
 		textExplainTurret4.setFillColor(sf::Color::Black);
 		//sf::FloatRect explainRect4 = textExplainTurret4.getLocalBounds();

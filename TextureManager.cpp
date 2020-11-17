@@ -7,7 +7,7 @@ sf::Font font;
 
 void TextureManager::loadAllFont()
 {
-    if (!font.loadFromFile("addons/font.ttf")) {
+    if (!font.loadFromFile("addons/font2.ttf")) {
 
         std::cout << "Impossible de charger les font." << std::endl;
     }

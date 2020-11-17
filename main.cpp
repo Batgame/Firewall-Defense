@@ -195,6 +195,8 @@ int main()
 
             if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
             {
+                mousePos = sf::Mouse::getPosition(window);
+
                 //------------SHOP----------------------
                 if (position_reel_x >= (BUTTON_POS.x - (0.5 * BUTTON_SIZE.x)) && position_reel_x <= BUTTON_POS.x + (0.5 * BUTTON_SIZE.x) && position_reel_y >= (BUTTON_POS.y - 0.5 * BUTTON_SIZE.y) && position_reel_y <= BUTTON_POS.y + 0.5 * BUTTON_SIZE.y) //sont dedans
                 {
@@ -207,12 +209,26 @@ int main()
                 //----------------------------ACHAT TOURELLE-----------------------
                 else if (flagClickLeft && !magasin.isOpenMenu())
                 {
-                    game.buyTurret(posSouris.x, posSouris.y, window, view);
+                    game.setSelectedTurret(turretSel);
+
                     flagClickLeft = false;
+
+                    game.buyTurret(posSouris.x, posSouris.y, window, view);
                 }
-                mousePos = sf::Mouse::getPosition(window);
-                magasin.turretSelect(window, mousePos, turretSel);
-                game.setSelectedTurret(turretSel);
+                else if (flagClickLeft && magasin.isOpenMenu())
+                {
+                    if (mousePos.x > (WIDTH / 4) * 3)
+                    {
+                        magasin.turretSelect(window, mousePos, turretSel);
+                        flagClickLeft = false;
+                    }
+                    else
+                    {
+                        game.setSelectedTurret(turretSel);
+                        game.buyTurret(posSouris.x, posSouris.y, window, view);
+                        flagClickLeft = false;
+                    }
+                }
             }
             else
             {
@@ -247,6 +263,6 @@ int main()
 
         }
         window.display();
-        window.clear();
+        window.clear(sf::Color(50,50,50));
     }
 }

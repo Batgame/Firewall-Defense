@@ -53,7 +53,6 @@ Projectile Turret::createProjectile()
 	return projectile;
 }
 
-
 Mortar Turret::createMortar(sf::Vector2f aim)
 {
 	coolDown = CD_KASPERSKY;

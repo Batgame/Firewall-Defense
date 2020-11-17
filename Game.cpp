@@ -3,19 +3,65 @@
 #include "header/Turret.h"
 #include <iostream>
 #include <math.h>
+#include <string>
+#include "header/TextureManager.h"
 #include <SFML/System.hpp>
 #include "header/Shop.h"
 
 float getDistance(sf::Vector2f a, sf::Vector2f b);
 
-Game::Game(int map_) : map(map_), money(50000000), level(0),trojanCount(0),sprsAvast(Spritesheet("addons/Avast.png",11,1)),sprsKaspersky(Spritesheet("addons/Kaspersky.png",9,1)),delayWave(DELAY_WAVE)
+extern sf::Font font;
+
+Game::Game(int map_) : map(map_), money(500), level(0),trojanCount(0),hp(100),sprsAvast(Spritesheet("addons/Avast.png",11,1)),sprsKaspersky(Spritesheet("addons/Kaspersky.png",9,1)),delayWave(DELAY_WAVE)
 , sprsUSBKillers(Spritesheet("addons/usb_killer.png", 4, 1)),sprsTrojan(Spritesheet("addons/Trojan.png",5,1))
 {
-	bg.loadFromFile("addons/ingameBackground.jpg");
-	sprBg = sf::Sprite(bg);
+	sizeX = 28;
+	sizeY = 16;
+	textureBg0.loadFromFile("addons/bg0.png");
+	textureBg1.loadFromFile("addons/bg1.png");
+	textureBg2.loadFromFile("addons/bg2.png");
+	textureBg3.loadFromFile("addons/bg3.png");
+
+	sprBg0 = sf::Sprite(textureBg0);
+	sprBg1 = sf::Sprite(textureBg1);
+	sprBg2 = sf::Sprite(textureBg2);
+	sprBg3 = sf::Sprite(textureBg3);
+
+	sprBg0.setScale(2.8125, 2.8125);
+	sprBg1.setScale(2.8125, 2.8125);
+	sprBg2.setScale(2.8125, 2.8125);
+	sprBg3.setScale(2.8125, 2.8125);
+
+	textureRoadHorizontal.loadFromFile("addons/road_horizontal.png");
+	textureRoadVertical.loadFromFile("addons/road_vertical.png");
+	textureRoadAngle.loadFromFile("addons/road_angle.png");
+	textureRoadInter.loadFromFile("addons/road_inter.png");
+	textureMoney.loadFromFile("addons/piece.png");
+	textureHp.loadFromFile("addons/coeur.png");
+	sprRoadHorizontal = sf::Sprite(textureRoadHorizontal);
+	sprRoadVertical = sf::Sprite(textureRoadVertical);
+	sprRoadInter = sf::Sprite(textureRoadInter);
+	sprRoadAngle = sf::Sprite(textureRoadAngle);
+	sprMoney = sf::Sprite(textureMoney);
+	sprHp = sf::Sprite(textureHp);
+	sprRoadHorizontal.setScale(2.8125, 2.8125);
+	sprRoadInter.setScale(2.8125, 2.8125);
+	sprRoadVertical.setScale(2.8125, 2.8125);
+	sprRoadAngle.setScale(2.8125, 2.8125);
+
 	selectedTurret = AVAST;
 
-	Road::createMap(roads,map);
+	Road::createMap(roads,map,sprRoadHorizontal,sprRoadVertical,sprRoadAngle,sprRoadInter);
+
+	for (int y = 0; y < sizeY; ++y)
+	{
+		for (int x = 0; x < sizeX; ++x)
+		{
+			bg.push_back(rand()%4);
+		}
+	}
+
+
 	levelUp();
 
 	switch (map)
@@ -123,6 +169,12 @@ void Game::refresh(sf::Time& dt)
 				{
 					trojans[j].hit(projectiles[i].getDamage());
 					projectiles[i].kill();
+					if (!trojans[j].isAlive())
+					{
+						money += TROJAN_VALUE;
+						trojans.erase(trojans.begin() + j);
+						--j;
+					}
 				}
 			}
 			for (int j = 0; j < usbKillers.size(); ++j)
@@ -131,6 +183,12 @@ void Game::refresh(sf::Time& dt)
 				{
 					usbKillers[j].hit(projectiles[i].getDamage());
 					projectiles[i].kill();
+					if (!usbKillers[j].isAlive())
+					{
+						money += USBKILLER_VALUE;
+						usbKillers.erase(usbKillers.begin() + j);
+						--j;
+					}
 				}
 			}
 		}
@@ -151,6 +209,12 @@ void Game::refresh(sf::Time& dt)
 				if (getDistance(explosion, trojans[j].getPos()) < radius)
 				{
 					trojans[j].hit(damage);
+					if (!trojans[j].isAlive())
+					{
+						money += TROJAN_VALUE;
+						trojans.erase(trojans.begin() + j);
+						--j;
+					}
 				}
 			}
 			for (int j = 0; j < usbKillers.size(); ++j)
@@ -158,6 +222,12 @@ void Game::refresh(sf::Time& dt)
 				if (getDistance(explosion, usbKillers[j].getPos()) < radius)
 				{
 					usbKillers[j].hit(damage);
+					if (!usbKillers[j].isAlive())
+					{
+						money += USBKILLER_VALUE;
+						usbKillers.erase(usbKillers.begin() + j);
+						--j;
+					}
 				}
 			}
 			mortars.erase(mortars.begin() + i);
@@ -182,7 +252,7 @@ void Game::refresh(sf::Time& dt)
 		{
 			trojans.erase(trojans.begin() + i);
 			--i;
-			money += TROJAN_VALUE;
+			hp -= TROJAN_DAMAGE;
 		}
 	}
 
@@ -192,7 +262,7 @@ void Game::refresh(sf::Time& dt)
 		{
 			usbKillers.erase(usbKillers.begin() + i);
 			--i;
-			money += USBKILLER_VALUE;
+			hp -= USBKILLER_DAMAGE;
 		}
 	}
 
@@ -287,7 +357,7 @@ void Game::buyTurret(int& mouseX, int& mouseY,sf::RenderWindow& rWindow, sf::Vie
 					}
 				}
 				if(validPlace)
-				turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsAvast, AVAST_SHOP));
+				turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsAvast, AVAST));
 			}
 			break;
 		case KASPERSKY_SHOP:
@@ -304,7 +374,7 @@ void Game::buyTurret(int& mouseX, int& mouseY,sf::RenderWindow& rWindow, sf::Vie
 					}
 				}
 				if (validPlace)
-					turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsKaspersky, KASPERSKY_SHOP));
+					turrets.push_back(Turret(sf::Vector2i(posX, posY), &sprsKaspersky, KASPERSKY));
 
 			}
 			break;
@@ -324,10 +394,10 @@ void Game::sellTurret(int &mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::V
 		{
 			switch (turrets[i].id)
 			{
-			case AVAST_SHOP:
+			case AVAST:
 				money += AVAST_PRICE/2;
 				break;
-			case KASPERSKY_SHOP:
+			case KASPERSKY:
 				money += KASPERSKY_PRICE / 2;
 				break;
 			}
@@ -335,7 +405,6 @@ void Game::sellTurret(int &mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::V
 			i = turrets.size();
 		}
 	}
-
 }
 
 void Game::levelUp()
@@ -370,47 +439,110 @@ void Game::levelUp()
 			break;
 		}
 	}
-
-
-	/*
-	usbKillerCount = 0.4f * level * level + 5;
-	if (level > 3)
-	{
-		trojanCount = 0.2f * (level-3) * (level-3) + 5;
-	}*/
 }
 
 void Game::beDraw(sf::RenderWindow& rWindow, sf::View const& view) 
 {
-	sprBg.setScale(view.getSize().x / bg.getSize().x, view.getSize().y / bg.getSize().y);
-	sprBg.setPosition(view.getCenter().x - view.getSize().x / 2, view.getCenter().y - view.getSize().y / 2);
-	rWindow.draw(sprBg);
-
-
-	for (int i = 0; i < roads.size(); i++)
+	//rWindow.draw(sprBg);
+	for (int y = 0; y < sizeY; ++y)
+	{
+		for (int x = 0; x < sizeX; ++x)
+		{
+			switch (rand()%4)
+			{
+			case 0:
+				sprBg0.setPosition(x * 45, y * 45);
+				rWindow.draw(sprBg0);
+				break;
+			case 1:
+				sprBg1.setPosition(x * 45, y * 45);
+				rWindow.draw(sprBg1);
+				break;
+			case 2:
+				sprBg2.setPosition(x * 45, y * 45);
+				rWindow.draw(sprBg2);
+				break;
+			case 3:
+				sprBg3.setPosition(x * 45, y * 45);
+				rWindow.draw(sprBg3);
+				break;
+			}
+		}
+	}
+	for (int i = 0; i < roads.size(); ++i)
 	{
 		roads[i].beDraw(rWindow);
 	}
-	for (int i = 0; i < trojans.size(); i++)
+	for (int i = 0; i < trojans.size(); ++i)
 	{
 		trojans[i].beDraw(rWindow);
 	}
-	for (int i = 0; i < usbKillers.size(); i++)
+	for (int i = 0; i < usbKillers.size(); ++i)
 	{
 		usbKillers[i].beDraw(rWindow);
 	}
-	for (int i = 0; i < projectiles.size(); i++)
+	for (int i = 0; i < projectiles.size(); ++i)
 	{
 		projectiles[i].beDraw(rWindow);
 	}
-	for (int i = 0; i < mortars.size(); i++)
+	for (int i = 0; i < mortars.size(); ++i)
 	{
 		mortars[i].beDraw(rWindow);
 	}
-	for (int i = 0; i < turrets.size(); i++)
+	for (int i = 0; i < turrets.size(); ++i)
 	{
 		turrets[i].beDraw(rWindow);
 	}
+
+
+	//-------MENU MONEY-----------
+	sf::RectangleShape rectInfo(sf::Vector2f(210.f, 130.f));
+	//sf::FloatRect rectInfoRect = rectInfo.getLocalBounds();
+    //rectInfo.setOrigin(rectInfoRect.width / 2.0f, rectInfoRect.height / 2.0f);
+	rectInfo.setFillColor(sf::Color::White);
+	rectInfo.setPosition(sf::Vector2f(10.f, 10.f));
+
+	sf::Text textArgent;
+	sf::Text textHp;
+	sf::Text textVague;
+
+	textVague.setFont(font);
+	textArgent.setFont(font);
+	textHp.setFont(font);
+	
+	//std::string 
+	textVague.setFillColor(sf::Color::Black);
+	textVague.setCharacterSize(18);
+	textVague.setString("Vague " + std::to_string(level)); //
+	textVague.setPosition(sf::Vector2f(20.f, 20.f));
+
+	textArgent.setFillColor(sf::Color::Black);
+	textArgent.setCharacterSize(17);
+	textArgent.setString("$" + std::to_string(money));
+	textArgent.setPosition(sf::Vector2f(50.f, 60.f));
+
+	textHp.setFillColor(sf::Color::Black);
+	textHp.setCharacterSize(17);
+	textHp.setString(std::to_string(hp));
+	textHp.setPosition(sf::Vector2f(50.f, 90.f));
+
+	;
+	sprMoney.setPosition(20, 60);
+	sprMoney.setScale(0.08, 0.08);
+
+	sprHp.setPosition(20, 90);
+	sprHp.setScale(0.08, 0.08);
+
+	
+	rWindow.draw(rectInfo);
+	rWindow.draw(textHp);
+	rWindow.draw(sprHp);
+	rWindow.draw(textArgent);
+	rWindow.draw(sprMoney);
+	rWindow.draw(textVague);
+
+	
+
 }
 
 float getDistance(sf::Vector2f a, sf::Vector2f b)

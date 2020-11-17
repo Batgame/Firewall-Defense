@@ -11,23 +11,27 @@
 
 #define AVAST_PRICE 100
 #define KASPERSKY_PRICE 500
+#define DEFENDER_PRICE 300
+#define MCAFEE_PRICE 1000
 
 #define TROJAN_VALUE 25
 #define USBKILLER_VALUE 10
 
+#define TROJAN_DAMAGE 20
+#define USBKILLER_DAMAGE 5
+
+
 
 class Game
 {
-	Spritesheet sprsAvast;
-	Spritesheet sprsKaspersky;
-	Spritesheet sprsUSBKillers;
-	Spritesheet sprsTrojan;
-	sf::Texture bg;
-	sf::Sprite sprBg;
-
 	int selectedTurret;
 	float delaySpawn;
 	int map;
+
+	int sizeX;
+	int sizeY;
+	std::vector<int> bg;
+
 	std::vector<Road> roads;
 	std::vector<Projectile> projectiles;
 	std::vector<Mortar> mortars;
@@ -39,9 +43,45 @@ class Game
 	int usbKillerCount;
 	int money;
 	int level;
+	int hp;
 
 public :
+	Spritesheet sprsAvast;
+	Spritesheet sprsKaspersky;
+	Spritesheet sprsUSBKillers;
+	Spritesheet sprsTrojan;
 
+	sf::Texture textureRoadVertical;
+	sf::Sprite sprRoadVertical;
+
+	sf::Texture textureRoadHorizontal;
+	sf::Sprite sprRoadHorizontal;
+
+	sf::Texture textureRoadAngle;
+	sf::Sprite sprRoadAngle;
+
+	sf::Texture textureRoadInter;
+	sf::Sprite sprRoadInter;
+
+	sf::Texture textureMoney;
+	sf::Sprite sprMoney;
+
+	//--------------------BackGround---------------------
+
+	sf::Texture textureBg0;
+	sf::Sprite sprBg0;
+
+	sf::Texture textureBg1;
+	sf::Sprite sprBg1;
+
+	sf::Texture textureBg2;
+	sf::Sprite sprBg2;
+
+	sf::Texture textureBg3;
+	sf::Sprite sprBg3;
+
+	sf::Texture textureHp;
+	sf::Sprite sprHp;
 	Game(int map_ = 1);
 	void refresh(sf::Time& dt);
 	void beDraw(sf::RenderWindow& rWindow,sf::View const& view);

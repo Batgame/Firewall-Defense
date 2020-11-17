@@ -53,7 +53,7 @@ void Trojan::refresh(sf::Time const& dt, std::vector<Road>& roads)
 void Trojan::beDraw(sf::RenderWindow& rWindow) const
 {
 	sf::Sprite spr = anim.getSprite();
-	spr.setScale(2, 2);
+	spr.setScale(3, 3);
 	spr.setOrigin(8, 8);
 
 	switch (direction)
@@ -71,13 +71,14 @@ void Trojan::beDraw(sf::RenderWindow& rWindow) const
 
 	spr.setPosition(pos.x * 45, pos.y * 45);
 
-	sf::RectangleShape r(sf::Vector2f(hp * 2,3));
+	sf::RectangleShape r(sf::Vector2f(hp * 2,6));
 	r.setOrigin(hp, 1.5);
-	r.setPosition(pos.x * 45, (pos.y + 0.3) * 45);
+	r.setPosition(pos.x * 45, (pos.y - 0.7) * 45);
 	r.setFillColor(sf::Color::Red);
 
-	rWindow.draw(r);
 	rWindow.draw(spr);
+	rWindow.draw(r);
+
 }
 
 void Trojan::hit(int damage)
