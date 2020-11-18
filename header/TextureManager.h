@@ -11,7 +11,11 @@ class TextureManager
 
 
 public :
+	
+	/*
+		Charge la font utilisé 
 
+	*/
 	static void loadAllFont();
 
 };

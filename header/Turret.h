@@ -15,7 +15,7 @@ enum e_id_Turret
 #define RANGE_AVAST 3
 
 #define CD_KASPERSKY 2
-#define DMG_KASPERSKY 13
+#define DMG_KASPERSKY 5
 #define RANGE_KASPERSKY 6
 
 class Turret

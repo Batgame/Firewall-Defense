@@ -14,8 +14,8 @@
 #define DEFENDER_PRICE 300
 #define MCAFEE_PRICE 1000
 
-#define TROJAN_VALUE 25
-#define USBKILLER_VALUE 10
+#define TROJAN_VALUE 100
+#define USBKILLER_VALUE 50
 
 #define TROJAN_DAMAGE 20
 #define USBKILLER_DAMAGE 5
@@ -44,6 +44,8 @@ class Game
 	int money;
 	int level;
 	int hp;
+
+	void levelUp();
 
 public :
 	Spritesheet sprsAvast;
@@ -89,5 +91,7 @@ public :
 	void setSelectedTurret(int const& turret);
 	void buyTurret(int& mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::View view);
 	void sellTurret(int& mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::View view);
-	void levelUp();
+	bool isLoose();
+	int getLevel();
+	void restart();
 };

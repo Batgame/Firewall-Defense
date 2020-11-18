@@ -21,11 +21,15 @@
 	qui vont remplacé les enumerations sont créée automatiquement (0,1,2,3,...)
 */
 
+extern sf::Font font;
+
+
 enum e_id_gamemode {
 	MENU,
 	INGAME,
     REGLES,
-	LOADING,	//Risque de ne pas être utilisé (Pas de chargement nécessaire)
+    GAME_OVER,
+    LOADING,	//Risque de ne pas être utilisé (Pas de chargement nécessaire)
 };
 
 
@@ -36,6 +40,11 @@ int main()
     sf::Vector2i posSouris;
     sf::Vector2i mousePos;
     sf::Event event;
+    
+    sf::Image imgIcon;
+    imgIcon.loadFromFile("addons/AvastShop.png");
+    window.setIcon(16, 16, imgIcon.getPixelsPtr());
+
     Game game(1);
     sf::Clock clock;
     sf::Time dt;
@@ -46,6 +55,7 @@ int main()
     bool flagEscape = false;
     int turretSel = 0;
     Shop magasin;
+    int lastBestWave = 0;
 
     game.setSelectedTurret(AVAST);
 
@@ -253,6 +263,12 @@ int main()
             }
 
             game.refresh(dt);
+            if (game.isLoose())
+            {
+                gameMode = GAME_OVER;
+                lastBestWave = game.getLevel();
+                game.restart();
+            }
             game.beDraw(window,view);
             magasin.beDraw(window, view);
             if(magasin.isOpenMenu())
@@ -260,9 +276,61 @@ int main()
                 magasin.turretExplain(window, turretSel);
             }
             break;
+        case GAME_OVER:
+            //-----------------------------------------------------Game Over------------------------------------------------------------
+            sf::RectangleShape buttonContinuer(sf::Vector2f(LARGEUR_RECT, HAUTEUR_RECT));
+            sf::FloatRect buttonContinuerRect = buttonContinuer.getLocalBounds();
+            sf::Text textContinuer;
+            sf::Text textGameOver;
+            sf::Text textLastWave;
 
+            textGameOver.setFont(font);
+            textGameOver.setCharacterSize(100);
+            textGameOver.setString("Game Over");
+            sf::FloatRect textGameOverRect = textGameOver.getLocalBounds();
+            textGameOver.setOrigin(textGameOverRect.width / 2.0f, textGameOverRect.height / 2.0f);
+            textGameOver.setPosition(sf::Vector2f(WIDTH / 2, 150));
+            textGameOver.setFillColor(sf::Color::White);
+
+            textContinuer.setFont(font);
+            textContinuer.setCharacterSize(TEXT_SIZE);
+            textContinuer.setString("Continuer");
+            sf::FloatRect textContinuerRect = textContinuer.getLocalBounds();
+            textContinuer.setOrigin(textContinuerRect.width / 2.0f, textContinuerRect.height / 2.0f);
+            textContinuer.setPosition(sf::Vector2f(WIDTH / 2, 0.75 * HEIGHT));
+            textContinuer.setFillColor(sf::Color::White);
+
+            textLastWave.setFont(font);
+            textLastWave.setCharacterSize(TEXT_SIZE);
+            textLastWave.setString("Vous avez tenu " + std::to_string(lastBestWave) + " vagues !");
+            sf::FloatRect textLastwaveRect = textLastWave.getLocalBounds();
+            textLastWave.setOrigin(textLastwaveRect.width / 2.0f, textLastwaveRect.height / 2.0f);
+            textLastWave.setPosition(sf::Vector2f(WIDTH / 2, 0.5 * HEIGHT));
+            textLastWave.setFillColor(sf::Color::White);
+
+
+            buttonContinuer.setOrigin(buttonContinuerRect.width / 2.0f, buttonContinuerRect.height / 2.0f);
+            buttonContinuer.setPosition(sf::Vector2f(WIDTH / 2, 0.75 * HEIGHT));
+            buttonContinuer.setFillColor(sf::Color(32, 32, 32));
+  
+
+            if (isButtonSelect(window, posSouris, sf::Vector2f(WIDTH / 2, 0.75 * HEIGHT)))
+            {
+                if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+                {
+                    gameMode = MENU;
+                }
+                buttonContinuer.setFillColor(sf::Color(24, 26, 27));
+                textContinuer.setFillColor(sf::Color::White);
+            }
+            
+            window.draw(buttonContinuer);
+            window.draw(textContinuer);
+            window.draw(textGameOver);
+            window.draw(textLastWave);
+            break;
         }
         window.display();
-        window.clear(sf::Color(50,50,50));
+        window.clear();
     }
 }

@@ -42,8 +42,8 @@ void USBKiller::refresh(sf::Time const& dt, std::vector<Road>& roads)
 		if (idRoad >= 0 && idRoad < roads.size())
 		{
 			direction = roads[idRoad].getNextRoad();
-			pos.x = int(roads[idRoad].getPos().x) + 0.5;
-			pos.y = int(roads[idRoad].getPos().y) + 0.5;
+			pos.x = int(roads[idRoad].getPos().x) + 0.5001;
+			pos.y = int(roads[idRoad].getPos().y) + 0.5001;
 		}
 		else
 		{

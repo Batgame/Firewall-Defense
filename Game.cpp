@@ -12,10 +12,10 @@ float getDistance(sf::Vector2f a, sf::Vector2f b);
 
 extern sf::Font font;
 
-Game::Game(int map_) : map(map_), money(500), level(0),trojanCount(0),hp(100),sprsAvast(Spritesheet("addons/Avast.png",11,1)),sprsKaspersky(Spritesheet("addons/Kaspersky.png",9,1)),delayWave(DELAY_WAVE)
+Game::Game(int map_) : map(map_), money(400), level(0),trojanCount(0),hp(100),sprsAvast(Spritesheet("addons/Avast.png",11,1)),sprsKaspersky(Spritesheet("addons/Kaspersky.png",9,1)),delayWave(DELAY_WAVE)
 , sprsUSBKillers(Spritesheet("addons/usb_killer.png", 4, 1)),sprsTrojan(Spritesheet("addons/Trojan.png",5,1))
 {
-	sizeX = 28;
+	sizeX = 30;
 	sizeY = 16;
 	textureBg0.loadFromFile("addons/bg0.png");
 	textureBg1.loadFromFile("addons/bg1.png");
@@ -59,25 +59,6 @@ Game::Game(int map_) : map(map_), money(500), level(0),trojanCount(0),hp(100),sp
 		{
 			bg.push_back(rand()%4);
 		}
-	}
-
-
-	levelUp();
-
-	switch (map)
-	{
-	case 1:
-
-		break;
-	case 2:
-
-
-
-
-		break;
-	case 3:
-
-		break;
 	}
 }
 
@@ -407,38 +388,59 @@ void Game::sellTurret(int &mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::V
 	}
 }
 
+bool Game::isLoose()
+{
+	return hp <= 0;
+}
+
 void Game::levelUp()
 {
 	level++;
 
-	if (level % 7 == 0)
-	{
-		//BOSS SPAWN !
-	}
-	else
-	{
-		switch (level % 3)
-		{
-		case 1:
-			usbKillerCount = 5;
-			break;
-		case 2:
-			usbKillerCount = 10;
-			break;
-		}
+switch (level)
+{
+case 1:
+	usbKillerCount = 2;	//"Présentation" des mobs
+	break;
+case 2:
+	usbKillerCount = 5;
+	break;
+case 3:
+	usbKillerCount = 10;
+	break;
+case 4:
+	trojanCount = 2;
+	usbKillerCount = 5;
+	break;
+case 5:
+	trojanCount = 2;
+	usbKillerCount = 10;
+	break;
+case 6:
+	trojanCount = 5;
+	usbKillerCount = 5;
+	break;
+case 7:
+	trojanCount = 10;
+	usbKillerCount = 5;
+	break;
+case 8:
+	trojanCount = 10;
+	usbKillerCount = 10;
+	break;
+case 9:
+	trojanCount = 13;
+	usbKillerCount = 8;
+	break;
 
-		switch (int(level / 2) % 3)
-		{
-		case 0:
-			break;
-		case 1:
-			trojanCount = 2;
-			break;
-		case 2:
-			trojanCount = 4;
-			break;
-		}
-	}
+case 10:
+	trojanCount = 15;
+	usbKillerCount = 15;
+
+
+	break;
+}
+	
 }
 
 void Game::beDraw(sf::RenderWindow& rWindow, sf::View const& view) 
@@ -448,7 +450,7 @@ void Game::beDraw(sf::RenderWindow& rWindow, sf::View const& view)
 	{
 		for (int x = 0; x < sizeX; ++x)
 		{
-			switch (rand()%4)
+			switch (bg[x + y * sizeX])
 			{
 			case 0:
 				sprBg0.setPosition(x * 45, y * 45);
@@ -512,10 +514,19 @@ void Game::beDraw(sf::RenderWindow& rWindow, sf::View const& view)
 	
 	//std::string 
 	textVague.setFillColor(sf::Color::Black);
-	textVague.setCharacterSize(18);
-	textVague.setString("Vague " + std::to_string(level)); //
-	textVague.setPosition(sf::Vector2f(20.f, 20.f));
-
+	
+	if(level == 1 or level == 0)
+	{
+		textVague.setString("Vague Entrainement");
+		textVague.setPosition(sf::Vector2f(10.f, 20.f));
+		textVague.setCharacterSize(16);
+	}
+	else
+	{
+		textVague.setString("Vague " + std::to_string(level-1)); //
+		textVague.setPosition(sf::Vector2f(20.f, 20.f));
+		textVague.setCharacterSize(18);
+	}
 	textArgent.setFillColor(sf::Color::Black);
 	textArgent.setCharacterSize(17);
 	textArgent.setString("$" + std::to_string(money));
@@ -526,7 +537,7 @@ void Game::beDraw(sf::RenderWindow& rWindow, sf::View const& view)
 	textHp.setString(std::to_string(hp));
 	textHp.setPosition(sf::Vector2f(50.f, 90.f));
 
-	;
+	
 	sprMoney.setPosition(20, 60);
 	sprMoney.setScale(0.08, 0.08);
 
@@ -540,12 +551,40 @@ void Game::beDraw(sf::RenderWindow& rWindow, sf::View const& view)
 	rWindow.draw(textArgent);
 	rWindow.draw(sprMoney);
 	rWindow.draw(textVague);
-
-	
-
 }
 
 float getDistance(sf::Vector2f a, sf::Vector2f b)
 {
 	return sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
+int Game::getLevel()
+{
+	return level;
+}
+
+void Game::restart()
+{
+	money = 400;
+	level = 0;
+	trojanCount = 0;
+	hp = 100;
+	delayWave = 7;
+	selectedTurret = AVAST;
+
+	turrets.clear();
+	trojans.clear();
+	usbKillers.clear();
+
+	roads.clear();
+	bg.clear();
+
+	Road::createMap(roads, map, sprRoadHorizontal, sprRoadVertical, sprRoadAngle, sprRoadInter);
+
+	for (int y = 0; y < sizeY; ++y)
+	{
+		for (int x = 0; x < sizeX; ++x)
+		{
+			bg.push_back(rand() % 4);
+		}
+	}
 }

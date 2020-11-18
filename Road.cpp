@@ -98,7 +98,7 @@ void Road::createMap(std::vector<Road>& map, int id, sf::Sprite hor, sf::Sprite 
 		map.push_back(Road(vert, sf::Vector2f(23, 8), p));
 		Road::drawLine(map, sf::Vector2f(23, 9), sf::Vector2f(24, 9), hor, vert, angle, inter);
 		Road::drawLine(map, sf::Vector2f(25, 5), sf::Vector2f(25, 11), hor, vert, angle, inter);
-		Road::drawLine(map, sf::Vector2f(25, 12), sf::Vector2f(27, 12), hor, vert, angle, inter);
+		Road::drawLine(map, sf::Vector2f(25, 12), sf::Vector2f(28, 12), hor, vert, angle, inter);
 
 
 
