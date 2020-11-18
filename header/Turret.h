@@ -29,12 +29,21 @@ class Turret
 public : 
 	int id;
 
+	//Constructeur de la tourelle
 	Turret(sf::Vector2i pos_, Spritesheet* sprs, int id_ = 0);
+	//La tour peut tirer
 	bool canShoot();
+	//Refresh la tourelle en fonction du temps
 	void resfresh(sf::Time const& dt);
+	//Creer un projectile
 	Projectile createProjectile();
+	//Creer un mortier (Pour les tourelles Kaspersky)
 	Mortar createMortar(sf::Vector2f aim);
+	//Retourne la position de la tourelle
 	sf::Vector2f getPos() const;
+	//Donne le rayon d'action de la tourelle
 	float getRange();
+	//Dessine la tourelle
 	void beDraw(sf::RenderWindow& rWindow) const;
+
 };

@@ -47,15 +47,29 @@ class Shop
 
 public :
 	
+	/*
+		Constructeur du shop
+		*/
 	Shop();
-
+	/*
+	Retourne si le shop est ouvert ou non
+	*/
 	bool isOpenMenu();
-
+	/*
+	Dessine le shop
+	*/
 	void beDraw(sf::RenderWindow& window,sf::View view);
+	/*
+		Switch l'ouverture du shop
+	*/
 	void switchActive();
-
+	/*
+		Change la sélection de Tourelle en fonction d'ou on clique (valeurs par référence)
+	*/
 	int turretSelect(sf::RenderWindow& window, sf::Vector2i mousePos, int& turretSelect);
-
+	/*
+		Switch l'ouverture du shop
+	*/
 	void turretExplain(sf::RenderWindow& window, int turretSelect);
 };
 

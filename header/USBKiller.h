@@ -18,13 +18,19 @@ class USBKiller
 
 public:
 
+	//Constructeur des usbKiller
 	USBKiller(Spritesheet* sprs,sf::Vector2f pos = sf::Vector2f(0, 0), int direction = 0);
+	//Constructeur des usbKiller
 	void refresh(sf::Time const& dt, std::vector<Road>& roads);
+	//Dessine l'usbKiller
 	void beDraw(sf::RenderWindow& rWindow) const;
+	//Inflige des degats a l'usbKiller
 	void hit(int damage);
+	//Demande si le joueur est vivant
 	bool isAlive();
+	//retourne la position de l'usbKiller
 	sf::Vector2f getPos();
+	//Retourne la position de l'usbKiller
 	sf::Vector2f getFuturePos();
-	//bool doCollide(std::vector);
 };
 

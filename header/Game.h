@@ -84,14 +84,26 @@ public :
 
 	sf::Texture textureHp;
 	sf::Sprite sprHp;
+
+	//Constructeur de la classe Game
 	Game(int map_ = 1);
+	//Refresh le jeux dans le temps
 	void refresh(sf::Time& dt);
+	//Dessine le jeux
 	void beDraw(sf::RenderWindow& rWindow,sf::View const& view);
+	//Refresh les tourelles	
 	void refreshTurrets(sf::Time const& dt);
+	//Setup la tourelle séléctionné via le shop
 	void setSelectedTurret(int const& turret);
+	//Achete une tourelles et la pose
 	void buyTurret(int& mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::View view);
+	//Vend une tourelle
 	void sellTurret(int& mouseX, int& mouseY, sf::RenderWindow& rWindow, sf::View view);
+	//Retourne vrai si je le jeux est perdu
 	bool isLoose();
+	//Retourne la vague actuelle
 	int getLevel();
+	//Recommence le jeu en cas de défaite
 	void restart();
+
 };

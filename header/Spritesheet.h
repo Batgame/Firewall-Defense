@@ -17,9 +17,19 @@ class Spritesheet
 	std::vector<sf::Sprite> sprites;
 
 public : 
+	
+	/*
+		Constructeur de la sritesheet
+	*/
 
 	Spritesheet(std::string fileName_,unsigned int nbSpriteX_ = 1, unsigned int nbSpriteY_ = 1);
-	unsigned int getTotalSprite(); //A single Sprite size
+	/*
+		Donne le nombre total de sprite
+	*/
+	unsigned int getTotalSprite();
+	/*
+		Retourne le sprite demandé
+	*/
 	sf::Sprite getSprite(int nbPos);
 };
 
